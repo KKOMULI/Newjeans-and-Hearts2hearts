@@ -1,0 +1,990 @@
+{
+    "schemaVersion":  "0.1",
+    "project":  "AI Mirror - Onboarding Question Scoring",
+    "createdAt":  "2026-06-28T15:30:00+09:00",
+    "purpose":  "온보딩 답변을 초기 행동 기준선, 대표 페르소나, 숨은 편향 민감도 점수로 변환하기 위한 MVP 점수표",
+    "principle":  "온보딩 결과는 확정 성격이 아니라 실제 거래 데이터가 쌓이기 전까지 사용하는 낮은 신뢰도의 초기 행동 가설이다.",
+    "axes":  {
+                 "orderSize":  [
+                                   "small_split",
+                                   "medium_size",
+                                   "concentrated"
+                               ],
+                 "tradeFrequency":  [
+                                        "low_frequency",
+                                        "regular",
+                                        "high_frequency"
+                                    ],
+                 "holdingPeriod":  [
+                                       "short_term",
+                                       "mid_term",
+                                       "long_term"
+                                   ],
+                 "preferredAssets":  [
+                                         "btc_eth_focused",
+                                         "alt_diversified",
+                                         "new_asset_explorer"
+                                     ],
+                 "marketReaction":  [
+                                        "wait_and_observe",
+                                        "trend_following",
+                                        "countertrend_entry"
+                                    ],
+                 "pnlReaction":  [
+                                     "wait_after_loss",
+                                     "reenter_after_loss",
+                                     "recovery_trading"
+                                 ]
+             },
+    "axisLabelsKo":  {
+                         "orderSize":  {
+                                           "small_split":  "소액 분할형",
+                                           "medium_size":  "중간 규모형",
+                                           "concentrated":  "집중 매수형"
+                                       },
+                         "tradeFrequency":  {
+                                                "low_frequency":  "저빈도",
+                                                "regular":  "규칙적",
+                                                "high_frequency":  "고빈도"
+                                            },
+                         "holdingPeriod":  {
+                                               "short_term":  "단기형",
+                                               "mid_term":  "중기형",
+                                               "long_term":  "장기형"
+                                           },
+                         "preferredAssets":  {
+                                                 "btc_eth_focused":  "BTC/ETH 중심",
+                                                 "alt_diversified":  "알트 분산형",
+                                                 "new_asset_explorer":  "신규 종목 탐색형"
+                                             },
+                         "marketReaction":  {
+                                                "wait_and_observe":  "관망형",
+                                                "trend_following":  "추세 추종형",
+                                                "countertrend_entry":  "역추세 진입형"
+                                            },
+                         "pnlReaction":  {
+                                             "wait_after_loss":  "대기형",
+                                             "reenter_after_loss":  "재진입형",
+                                             "recovery_trading":  "복구 매매형"
+                                         }
+                     },
+    "sensitivitySignals":  {
+                               "fomo":  "급등/신규 종목/놓칠 것 같은 상황에 반응하는 민감도",
+                               "panicSelling":  "급락/손실 구간에서 대량 매도로 반응할 가능성",
+                               "overconfidence":  "수익 또는 확신 이후 주문 규모를 크게 늘릴 가능성",
+                               "recoveryTrading":  "손실 직후 만회를 목적으로 더 빠르게 또는 더 크게 재진입할 가능성",
+                               "lossAversion":  "손실 상황을 크게 의식하거나 손실 회피 행동으로 이어질 가능성"
+                           },
+    "personaPrototypes":  {
+                              "stable_accumulator":  {
+                                                         "nameKo":  "안정 적립형",
+                                                         "axisProfile":  {
+                                                                             "orderSize":  "small_split",
+                                                                             "tradeFrequency":  "low_frequency",
+                                                                             "holdingPeriod":  "long_term",
+                                                                             "preferredAssets":  "btc_eth_focused",
+                                                                             "marketReaction":  "wait_and_observe",
+                                                                             "pnlReaction":  "wait_after_loss"
+                                                                         }
+                                                     },
+                              "balanced_rebalancer":  {
+                                                          "nameKo":  "균형 조정형",
+                                                          "axisProfile":  {
+                                                                              "orderSize":  "medium_size",
+                                                                              "tradeFrequency":  "regular",
+                                                                              "holdingPeriod":  "mid_term",
+                                                                              "preferredAssets":  "btc_eth_focused",
+                                                                              "marketReaction":  "wait_and_observe",
+                                                                              "pnlReaction":  "wait_after_loss"
+                                                                          }
+                                                      },
+                              "cautious_explorer":  {
+                                                        "nameKo":  "신중 탐색형",
+                                                        "axisProfile":  {
+                                                                            "orderSize":  "small_split",
+                                                                            "tradeFrequency":  "regular",
+                                                                            "holdingPeriod":  "mid_term",
+                                                                            "preferredAssets":  "alt_diversified",
+                                                                            "marketReaction":  "wait_and_observe",
+                                                                            "pnlReaction":  "wait_after_loss"
+                                                                        }
+                                                    },
+                              "trend_responder":  {
+                                                         "nameKo":  "추세 반응형",
+                                                         "axisProfile":  {
+                                                                             "orderSize":  "medium_size",
+                                                                             "tradeFrequency":  "regular",
+                                                                             "holdingPeriod":  "short_term",
+                                                                             "preferredAssets":  "alt_diversified",
+                                                                             "marketReaction":  "trend_following",
+                                                                             "pnlReaction":  "reenter_after_loss"
+                                                                         }
+                                                     },
+                              "volatility_responder":  {
+                                                      "nameKo":  "변동성 대응형",
+                                                      "axisProfile":  {
+                                                                          "orderSize":  "medium_size",
+                                                                          "tradeFrequency":  "high_frequency",
+                                                                          "holdingPeriod":  "short_term",
+                                                                          "preferredAssets":  "alt_diversified",
+                                                                          "marketReaction":  "trend_following",
+                                                                          "pnlReaction":  "reenter_after_loss"
+                                                                      }
+                                                  },
+                              "recovery_sensitive":  {
+                                                      "nameKo":  "복구 민감형",
+                                                      "axisProfile":  {
+                                                                          "orderSize":  "concentrated",
+                                                                          "tradeFrequency":  "high_frequency",
+                                                                          "holdingPeriod":  "short_term",
+                                                                          "preferredAssets":  "alt_diversified",
+                                                                          "marketReaction":  "trend_following",
+                                                                          "pnlReaction":  "recovery_trading"
+                                                                      }
+                                                  }
+                          },
+    "scoringRules":  {
+                         "axisWinner":  "각 축의 하위 라벨 점수를 합산한 뒤 가장 높은 라벨을 선택한다.",
+                         "axisTie":  "동점이면 mixed로 표시하고 해당 축 confidence를 낮춘다. MVP에서는 추가 질문 없이 대표 페르소나 거리 계산에 낮은 가중치로 반영한다.",
+                         "axisConfidence":  "topScore / sum(axisScores). 점수가 없으면 0으로 둔다.",
+                         "sensitivityNormalization":  "각 민감도 점수는 합산 후 0~1 범위로 cap한다.",
+                         "personaMatch":  "사용자 축 결과와 personaPrototypes의 축 결과를 비교해 일치한 축의 weight를 합산한다. 축 confidence가 낮으면 해당 축 기여도도 낮아진다.",
+                         "personaWeights":  {
+                                                "orderSize":  0.18,
+                                                "tradeFrequency":  0.14,
+                                                "holdingPeriod":  0.16,
+                                                "preferredAssets":  0.16,
+                                                "marketReaction":  0.18,
+                                                "pnlReaction":  0.18
+                                            },
+                         "coldStartBaselineConfidence":  "0~5건 실제 거래 구간에서는 온보딩 결과를 0.8, 실제 거래를 0.2로 반영한다. 실제 거래가 쌓일수록 온보딩 가중치를 낮춘다."
+                     },
+    "questions":  [
+                      {
+                          "questionId":  "Q1",
+                          "type":  "survey",
+                          "titleKo":  "주문 규모",
+                          "promptKo":  "처음 투자한다면 한 번에 어느 정도 투자하는 것이 가장 편할 것 같나요?",
+                          "visualSpec":  null,
+                          "options":  [
+                                          {
+                                              "optionId":  "Q1_A",
+                                              "labelKo":  "조금씩 나눠서 투자한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "small_split":  2
+                                                                               }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "초기 기준선을 작은 주문 단위로 둔다."
+                                          },
+                                          {
+                                              "optionId":  "Q1_B",
+                                              "labelKo":  "상황에 따라 적당한 금액으로 투자한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "medium_size":  2
+                                                                               }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "중간 규모 주문 기준선에 가깝다."
+                                          },
+                                          {
+                                              "optionId":  "Q1_C",
+                                              "labelKo":  "확신이 있다면 한 번에 크게 투자한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "concentrated":  2
+                                                                               }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.1
+                                                                    },
+                                              "note":  "집중 주문 기준선과 과신 민감도를 약하게 올린다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "orderSize"
+                                          ],
+                          "secondarySignals":  [
+                                                   "overconfidence"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q2",
+                          "type":  "survey",
+                          "titleKo":  "거래 빈도",
+                          "promptKo":  "투자를 시작한다면 얼마나 자주 확인하거나 거래할 것 같나요?",
+                          "visualSpec":  null,
+                          "options":  [
+                                          {
+                                              "optionId":  "Q2_A",
+                                              "labelKo":  "일주일에 1~2번 정도",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "low_frequency":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "저빈도 기준선."
+                                          },
+                                          {
+                                              "optionId":  "Q2_B",
+                                              "labelKo":  "하루에 1번 정도",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "regular":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "규칙적 확인 기준선."
+                                          },
+                                          {
+                                              "optionId":  "Q2_C",
+                                              "labelKo":  "하루에도 여러 번 확인한다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.06,
+                                                                        "fomo":  0.08
+                                                                    },
+                                              "note":  "고빈도 기준선. 시장 자극에 노출되는 시간이 길다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "tradeFrequency"
+                                          ],
+                          "secondarySignals":  [
+                                                   "fomo",
+                                                   "overconfidence"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q3",
+                          "type":  "survey",
+                          "titleKo":  "보유 기간",
+                          "promptKo":  "매수 후 가격이 오르거나 내려도 보통 어느 기간까지 지켜볼 수 있을 것 같나요?",
+                          "visualSpec":  null,
+                          "options":  [
+                                          {
+                                              "optionId":  "Q3_A",
+                                              "labelKo":  "하루 이내에 판단하고 싶다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  1
+                                                                                    },
+                                                                 "holdingPeriod":  {
+                                                                                       "short_term":  2
+                                                                                   }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "단기 보유와 빠른 확인 리듬."
+                                          },
+                                          {
+                                              "optionId":  "Q3_B",
+                                              "labelKo":  "며칠에서 몇 주 정도는 지켜본다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "regular":  1
+                                                                                    },
+                                                                 "holdingPeriod":  {
+                                                                                       "mid_term":  2
+                                                                                   }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "중기 보유 기준선."
+                                          },
+                                          {
+                                              "optionId":  "Q3_C",
+                                              "labelKo":  "한 달 이상도 기다릴 수 있다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "low_frequency":  1
+                                                                                    },
+                                                                 "holdingPeriod":  {
+                                                                                       "long_term":  2
+                                                                                   }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "장기 보유 기준선."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "holdingPeriod",
+                                              "tradeFrequency"
+                                          ],
+                          "secondarySignals":  [
+
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q4",
+                          "type":  "survey",
+                          "titleKo":  "선호 자산",
+                          "promptKo":  "처음 투자한다면 어떤 코인부터 관심이 갈 것 같나요?",
+                          "visualSpec":  null,
+                          "options":  [
+                                          {
+                                              "optionId":  "Q4_A",
+                                              "labelKo":  "BTC나 ETH처럼 대표 코인부터 본다",
+                                              "axisScores":  {
+                                                                 "preferredAssets":  {
+                                                                                         "btc_eth_focused":  2
+                                                                                     }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "대표 자산 중심."
+                                          },
+                                          {
+                                              "optionId":  "Q4_B",
+                                              "labelKo":  "유명한 알트코인도 함께 살펴본다",
+                                              "axisScores":  {
+                                                                 "preferredAssets":  {
+                                                                                         "alt_diversified":  2
+                                                                                     }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "알트 분산 탐색."
+                                          },
+                                          {
+                                              "optionId":  "Q4_C",
+                                              "labelKo":  "새로 뜨는 코인이나 이슈 종목도 본다",
+                                              "axisScores":  {
+                                                                 "preferredAssets":  {
+                                                                                         "new_asset_explorer":  2
+                                                                                     }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "fomo":  0.15
+                                                                    },
+                                              "note":  "신규 종목 탐색 기준선과 FOMO 민감도."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "preferredAssets"
+                                          ],
+                          "secondarySignals":  [
+                                                   "fomo"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q5",
+                          "type":  "survey",
+                          "titleKo":  "손익 후 반응",
+                          "promptKo":  "투자금이 10% 줄었다면 가장 가까운 행동은 무엇인가요?",
+                          "visualSpec":  null,
+                          "options":  [
+                                          {
+                                              "optionId":  "Q5_A",
+                                              "labelKo":  "잠시 쉬고 다시 본다",
+                                              "axisScores":  {
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  1
+                                                                                    },
+                                                                 "pnlReaction":  {
+                                                                                     "wait_after_loss":  2
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "손실 후 대기 기준선."
+                                          },
+                                          {
+                                              "optionId":  "Q5_B",
+                                              "labelKo":  "왜 줄었는지 확인하고 계획을 다시 본다",
+                                              "axisScores":  {
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  1
+                                                                                    },
+                                                                 "pnlReaction":  {
+                                                                                     "wait_after_loss":  1,
+                                                                                     "reenter_after_loss":  1
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "대기와 계획 재진입 사이."
+                                          },
+                                          {
+                                              "optionId":  "Q5_C",
+                                              "labelKo":  "빨리 만회할 기회를 찾고 싶다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  1
+                                                                                    },
+                                                                 "pnlReaction":  {
+                                                                                     "recovery_trading":  2
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.1,
+                                                                        "recoveryTrading":  0.35
+                                                                    },
+                                              "note":  "복구 매매 민감도를 강하게 올린다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "pnlReaction",
+                                              "marketReaction"
+                                          ],
+                          "secondarySignals":  [
+                                                   "recoveryTrading",
+                                                   "overconfidence"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q6",
+                          "type":  "survey",
+                          "titleKo":  "수익 후 주문 규모",
+                          "promptKo":  "수익이 났다면 다음 거래는 어떻게 할 가능성이 높나요?",
+                          "visualSpec":  null,
+                          "options":  [
+                                          {
+                                              "optionId":  "Q6_A",
+                                              "labelKo":  "같은 규모를 유지한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "small_split":  1,
+                                                                                   "medium_size":  1
+                                                                               },
+                                                                 "pnlReaction":  {
+                                                                                     "wait_after_loss":  1
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "수익 이후에도 주문 규모를 크게 바꾸지 않는다."
+                                          },
+                                          {
+                                              "optionId":  "Q6_B",
+                                              "labelKo":  "조금만 늘려본다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "medium_size":  2
+                                                                               },
+                                                                 "pnlReaction":  {
+                                                                                     "reenter_after_loss":  1
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.15
+                                                                    },
+                                              "note":  "주문 규모 증가와 재진입 성향을 약하게 반영한다."
+                                          },
+                                          {
+                                              "optionId":  "Q6_C",
+                                              "labelKo":  "자신감이 생겨 더 크게 투자한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "concentrated":  2
+                                                                               },
+                                                                 "pnlReaction":  {
+                                                                                     "reenter_after_loss":  1
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.35,
+                                                                        "fomo":  0.1
+                                                                    },
+                                              "note":  "과신 민감도를 강하게 올린다. 복구 매매형과는 분리한다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "orderSize"
+                                          ],
+                          "secondarySignals":  [
+                                                   "overconfidence",
+                                                   "fomo"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q7",
+                          "type":  "chart_single",
+                          "titleKo":  "급등 캔들 반응",
+                          "promptKo":  "15분 동안 +8% 상승하고 거래량이 크게 늘어난 차트를 보면 어떤 행동에 가장 가깝나요?",
+                          "visualSpec":  {
+                                             "chartType":  "candlestick",
+                                             "scenario":  "15m_sharp_rise",
+                                             "changePct":  8,
+                                             "volumeSpike":  "high",
+                                             "uiHint":  "긴 양봉과 거래량 급증 막대를 함께 표시"
+                                         },
+                          "options":  [
+                                          {
+                                              "optionId":  "Q7_A",
+                                              "labelKo":  "일단 관망한다",
+                                              "axisScores":  {
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "급등 상황에서도 관망."
+                                          },
+                                          {
+                                              "optionId":  "Q7_B",
+                                              "labelKo":  "소액만 들어가 본다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "small_split":  1
+                                                                               },
+                                                                 "marketReaction":  {
+                                                                                        "trend_following":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "fomo":  0.15
+                                                                    },
+                                              "note":  "추세 추종 성향은 있으나 주문 규모는 작다."
+                                          },
+                                          {
+                                              "optionId":  "Q7_C",
+                                              "labelKo":  "더 오르기 전에 바로 매수한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "concentrated":  1,
+                                                                                   "medium_size":  1
+                                                                               },
+                                                                 "preferredAssets":  {
+                                                                                         "new_asset_explorer":  1
+                                                                                     },
+                                                                 "marketReaction":  {
+                                                                                        "trend_following":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.1,
+                                                                        "fomo":  0.35
+                                                                    },
+                                              "note":  "FOMO 민감도를 강하게 올린다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "marketReaction",
+                                              "orderSize"
+                                          ],
+                          "secondarySignals":  [
+                                                   "fomo",
+                                                   "overconfidence"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q8",
+                          "type":  "chart_single",
+                          "titleKo":  "급락 캔들 반응",
+                          "promptKo":  "30분 동안 -7% 하락하고 거래량이 급증한 차트를 이미 보유 중이라면 어떻게 할 가능성이 높나요?",
+                          "visualSpec":  {
+                                             "chartType":  "candlestick",
+                                             "scenario":  "30m_sharp_drop",
+                                             "changePct":  -7,
+                                             "volumeSpike":  "high",
+                                             "uiHint":  "긴 음봉과 거래량 급증 막대를 함께 표시"
+                                         },
+                          "options":  [
+                                          {
+                                              "optionId":  "Q8_A",
+                                              "labelKo":  "바로 판단하지 않고 기다린다",
+                                              "axisScores":  {
+                                                                 "pnlReaction":  {
+                                                                                     "wait_after_loss":  1
+                                                                                 },
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "급락 상황에서도 관망."
+                                          },
+                                          {
+                                              "optionId":  "Q8_B",
+                                              "labelKo":  "과하게 빠졌다면 추가 매수 기회를 본다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "small_split":  1
+                                                                               },
+                                                                 "marketReaction":  {
+                                                                                        "countertrend_entry":  2
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "lossAversion":  0.08
+                                                                    },
+                                              "note":  "역추세 진입형 기준선."
+                                          },
+                                          {
+                                              "optionId":  "Q8_C",
+                                              "labelKo":  "손실을 줄이기 위해 대부분 매도한다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "panicSelling":  0.35,
+                                                                        "lossAversion":  0.18
+                                                                    },
+                                              "note":  "축 라벨보다는 Panic Selling 민감도에 반영한다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "marketReaction"
+                                          ],
+                          "secondarySignals":  [
+                                                   "panicSelling",
+                                                   "lossAversion"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q9",
+                          "type":  "chart_compare",
+                          "titleKo":  "BTC와 알트 선택",
+                          "promptKo":  "완만하게 오르는 BTC 차트와 급등락이 큰 알트코인 차트 중 어디에 더 관심이 가나요?",
+                          "visualSpec":  {
+                                             "chartType":  "comparison",
+                                             "left":  "BTC_slow_uptrend",
+                                             "right":  "alt_high_volatility",
+                                             "uiHint":  "왼쪽 안정 상승, 오른쪽 큰 변동성 차트"
+                                         },
+                          "options":  [
+                                          {
+                                              "optionId":  "Q9_A",
+                                              "labelKo":  "BTC 쪽이 더 편하다",
+                                              "axisScores":  {
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  1
+                                                                                    },
+                                                                 "preferredAssets":  {
+                                                                                         "btc_eth_focused":  2
+                                                                                     }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "대표 자산 중심."
+                                          },
+                                          {
+                                              "optionId":  "Q9_B",
+                                              "labelKo":  "알트코인을 소액으로만 확인해본다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "small_split":  1
+                                                                               },
+                                                                 "preferredAssets":  {
+                                                                                         "alt_diversified":  2
+                                                                                     }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "fomo":  0.08
+                                                                    },
+                                              "note":  "신중한 알트 탐색."
+                                          },
+                                          {
+                                              "optionId":  "Q9_C",
+                                              "labelKo":  "변동성이 큰 알트코인에 적극 진입하고 싶다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "medium_size":  1
+                                                                               },
+                                                                 "preferredAssets":  {
+                                                                                         "new_asset_explorer":  2
+                                                                                     },
+                                                                 "marketReaction":  {
+                                                                                        "trend_following":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.12,
+                                                                        "fomo":  0.25
+                                                                    },
+                                              "note":  "신규 종목과 추세 반응을 함께 반영."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "preferredAssets",
+                                              "marketReaction"
+                                          ],
+                          "secondarySignals":  [
+                                                   "fomo",
+                                                   "overconfidence"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q10",
+                          "type":  "chart_context",
+                          "titleKo":  "손실 후 반등",
+                          "promptKo":  "손절한 코인이 20분 뒤 다시 반등하는 모습을 보면 어떤 행동에 가장 가깝나요?",
+                          "visualSpec":  {
+                                             "chartType":  "contextual_candlestick",
+                                             "scenario":  "loss_then_rebound",
+                                             "uiHint":  "손절 지점과 이후 반등 캔들을 표시"
+                                         },
+                          "options":  [
+                                          {
+                                              "optionId":  "Q10_A",
+                                              "labelKo":  "오늘은 쉬고 다시 본다",
+                                              "axisScores":  {
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  1
+                                                                                    },
+                                                                 "pnlReaction":  {
+                                                                                     "wait_after_loss":  2
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "손실 후 대기."
+                                          },
+                                          {
+                                              "optionId":  "Q10_B",
+                                              "labelKo":  "원래 계획이 맞다면 소액만 재진입한다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "small_split":  1
+                                                                               },
+                                                                 "pnlReaction":  {
+                                                                                     "reenter_after_loss":  2
+                                                                                 }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "recoveryTrading":  0.1
+                                                                    },
+                                              "note":  "계획 기반 재진입."
+                                          },
+                                          {
+                                              "optionId":  "Q10_C",
+                                              "labelKo":  "손실을 만회하기 위해 더 크게 들어간다",
+                                              "axisScores":  {
+                                                                 "pnlReaction":  {
+                                                                                     "recovery_trading":  2
+                                                                                 },
+                                                                 "orderSize":  {
+                                                                                   "concentrated":  1
+                                                                               },
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.12,
+                                                                        "recoveryTrading":  0.4
+                                                                    },
+                                              "note":  "복구 매매형의 핵심 신호."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "pnlReaction",
+                                              "orderSize"
+                                          ],
+                          "secondarySignals":  [
+                                                   "recoveryTrading",
+                                                   "overconfidence"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q11",
+                          "type":  "chart_context",
+                          "titleKo":  "수익 후 재진입",
+                          "promptKo":  "+6% 수익을 실현했는데 같은 코인이 계속 상승한다면 다음 행동은 무엇에 가깝나요?",
+                          "visualSpec":  {
+                                             "chartType":  "contextual_candlestick",
+                                             "scenario":  "profit_then_continued_rise",
+                                             "uiHint":  "익절 지점과 이후 상승 캔들을 표시"
+                                         },
+                          "options":  [
+                                          {
+                                              "optionId":  "Q11_A",
+                                              "labelKo":  "수익을 확정하고 오늘은 마무리한다",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "low_frequency":  1
+                                                                                    },
+                                                                 "marketReaction":  {
+                                                                                        "wait_and_observe":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "수익 후 관망."
+                                          },
+                                          {
+                                              "optionId":  "Q11_B",
+                                              "labelKo":  "같은 규모로 다시 기회를 본다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "medium_size":  1
+                                                                               },
+                                                                 "pnlReaction":  {
+                                                                                     "reenter_after_loss":  1
+                                                                                 },
+                                                                 "marketReaction":  {
+                                                                                        "trend_following":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.12
+                                                                    },
+                                              "note":  "재진입 성향과 추세 추종을 약하게 반영."
+                                          },
+                                          {
+                                              "optionId":  "Q11_C",
+                                              "labelKo":  "더 큰 금액으로 다시 들어간다",
+                                              "axisScores":  {
+                                                                 "orderSize":  {
+                                                                                   "concentrated":  2
+                                                                               },
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  1
+                                                                                    },
+                                                                 "marketReaction":  {
+                                                                                        "trend_following":  1
+                                                                                    }
+                                                             },
+                                              "sensitivityScores":  {
+                                                                        "overconfidence":  0.4,
+                                                                        "fomo":  0.15
+                                                                    },
+                                              "note":  "과신 민감도의 핵심 신호. 복구 매매와 분리한다."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "orderSize",
+                                              "marketReaction"
+                                          ],
+                          "secondarySignals":  [
+                                                   "overconfidence",
+                                                   "fomo"
+                                               ]
+                      },
+                      {
+                          "questionId":  "Q12",
+                          "type":  "chart_compare",
+                          "titleKo":  "차트 시간대 선호",
+                          "promptKo":  "투자 판단을 할 때 어떤 차트가 가장 편하게 느껴지나요?",
+                          "visualSpec":  {
+                                             "chartType":  "timeframe_comparison",
+                                             "options":  [
+                                                             "1h",
+                                                             "1d",
+                                                             "1w"
+                                                         ],
+                                             "uiHint":  "같은 코인의 1시간봉, 일봉, 주봉을 나란히 표시"
+                                         },
+                          "options":  [
+                                          {
+                                              "optionId":  "Q12_A",
+                                              "labelKo":  "1시간봉처럼 짧은 흐름",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "high_frequency":  1
+                                                                                    },
+                                                                 "holdingPeriod":  {
+                                                                                       "short_term":  2
+                                                                                   }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "단기 보유와 빠른 대응."
+                                          },
+                                          {
+                                              "optionId":  "Q12_B",
+                                              "labelKo":  "일봉처럼 며칠 단위 흐름",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "regular":  1
+                                                                                    },
+                                                                 "holdingPeriod":  {
+                                                                                       "mid_term":  2
+                                                                                   }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "중기 보유."
+                                          },
+                                          {
+                                              "optionId":  "Q12_C",
+                                              "labelKo":  "주봉처럼 긴 흐름",
+                                              "axisScores":  {
+                                                                 "tradeFrequency":  {
+                                                                                        "low_frequency":  1
+                                                                                    },
+                                                                 "holdingPeriod":  {
+                                                                                       "long_term":  2
+                                                                                   }
+                                                             },
+                                              "sensitivityScores":  {
+
+                                                                    },
+                                              "note":  "장기 보유."
+                                          }
+                                      ],
+                          "primaryAxes":  [
+                                              "holdingPeriod",
+                                              "tradeFrequency"
+                                          ],
+                          "secondarySignals":  [
+
+                                               ]
+                      }
+                  ],
+    "outputContract":  {
+                           "personaId":  "stable_accumulator | balanced_rebalancer | cautious_explorer | trend_responder | volatility_responder | recovery_sensitive",
+                           "personaNameKo":  "대표 페르소나 이름",
+                           "axisProfile":  {
+                                               "orderSize":  "label",
+                                               "tradeFrequency":  "label",
+                                               "holdingPeriod":  "label",
+                                               "preferredAssets":  "label",
+                                               "marketReaction":  "label",
+                                               "pnlReaction":  "label"
+                                           },
+                           "axisConfidence":  {
+                                                  "orderSize":  0,
+                                                  "tradeFrequency":  0,
+                                                  "holdingPeriod":  0,
+                                                  "preferredAssets":  0,
+                                                  "marketReaction":  0,
+                                                  "pnlReaction":  0
+                                              },
+                           "sensitivity":  {
+                                               "fomo":  0,
+                                               "panicSelling":  0,
+                                               "overconfidence":  0,
+                                               "recoveryTrading":  0,
+                                               "lossAversion":  0
+                                           },
+                           "onboardingConfidence":  0,
+                           "resultMessageKo":  "현재 응답 기준으로는 ...에 가장 가깝습니다. 실제 거래 데이터가 쌓이면 이 프로필은 자동으로 조정됩니다."
+                       }
+}

@@ -1,0 +1,748 @@
+{
+  "schemaVersion": "0.1",
+  "project": "AI Mirror - Upbit Extension Prototype",
+  "principle": "This system does not predict markets or recommend trades. It compares the current order with the user's historical behavior pattern.",
+  "user": {
+    "userId": "user_a",
+    "profilePolicy": "derived_from_historical_trades",
+    "lookbackDays": 60,
+    "note": "No persona is assigned manually. Labels are inferred from trading behavior."
+  },
+  "labelAxes": [
+    {
+      "axis": "order_size",
+      "labels": ["small_split", "medium_size", "concentrated"],
+      "features": ["averageOrderAmountKRW", "medianOrderAmountKRW", "p90OrderAmountKRW", "maxToMedianRatio"]
+    },
+    {
+      "axis": "trade_frequency",
+      "labels": ["low_frequency", "regular", "high_frequency"],
+      "features": ["weeklyTradeCount", "sameDayTradeCount", "medianIntervalHours"]
+    },
+    {
+      "axis": "holding_period",
+      "labels": ["short_term", "mid_term", "long_term"],
+      "features": ["averageHoldingPeriodHours", "medianHoldingPeriodHours"]
+    },
+    {
+      "axis": "preferred_assets",
+      "labels": ["btc_eth_focused", "alt_diversified", "new_asset_explorer"],
+      "features": ["topTwoAssetAmountShare", "newAssetTradeRatio", "uniqueCoinCount"]
+    },
+    {
+      "axis": "market_reactivity",
+      "labels": ["wait_and_observe", "trend_following", "countertrend_entry"],
+      "features": ["sharpMoveObservationRatio", "trendFollowingEntryRatio", "countertrendEntryRatio"]
+    },
+    {
+      "axis": "pnl_reactivity",
+      "labels": ["wait_after_loss", "reenter_after_loss", "recovery_trading"],
+      "features": ["retradeWithinOneHourAfterLossRatio", "orderAmountChangeAfterLoss", "recoveryTradeAfterLossRatio"]
+    }
+  ],
+  "historicalTrades": [
+    {
+      "tradeId": "T001",
+      "timestamp": "2026-05-01T09:18:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 320000,
+      "priceKRW": 92800000,
+      "quantity": 0.003448,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.8,
+        "volatilityPct": 1.7,
+        "volumeChangeRatePct": 14.0,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T002",
+      "timestamp": "2026-05-03T21:10:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "buy",
+      "orderAmountKRW": 280000,
+      "priceKRW": 4820000,
+      "quantity": 0.058091,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": -0.4,
+        "volatilityPct": 1.5,
+        "volumeChangeRatePct": 8.5,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T003",
+      "timestamp": "2026-05-05T10:42:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 360000,
+      "priceKRW": 93650000,
+      "quantity": 0.003844,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.1,
+        "volatilityPct": 1.9,
+        "volumeChangeRatePct": 18.2,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T004",
+      "timestamp": "2026-05-08T20:35:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "sell",
+      "orderAmountKRW": 304000,
+      "priceKRW": 4970000,
+      "quantity": 0.061167,
+      "realizedPnlKRW": 24000,
+      "holdingPeriodHours": 118,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.7,
+        "volatilityPct": 2.0,
+        "volumeChangeRatePct": 22.0,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T005",
+      "timestamp": "2026-05-10T09:51:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "sell",
+      "orderAmountKRW": 386000,
+      "priceKRW": 95100000,
+      "quantity": 0.004059,
+      "realizedPnlKRW": 26000,
+      "holdingPeriodHours": 214,
+      "marketCondition": {
+        "shortTermChangeRatePct": 2.2,
+        "volatilityPct": 2.4,
+        "volumeChangeRatePct": 30.5,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T006",
+      "timestamp": "2026-05-12T22:14:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 340000,
+      "priceKRW": 94400000,
+      "quantity": 0.003602,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": -0.9,
+        "volatilityPct": 1.8,
+        "volumeChangeRatePct": 11.3,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T007",
+      "timestamp": "2026-05-14T10:05:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "buy",
+      "orderAmountKRW": 300000,
+      "priceKRW": 4885000,
+      "quantity": 0.061413,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.3,
+        "volatilityPct": 1.4,
+        "volumeChangeRatePct": 7.4,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T008",
+      "timestamp": "2026-05-17T20:46:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 390000,
+      "priceKRW": 96200000,
+      "quantity": 0.004054,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.4,
+        "volatilityPct": 1.9,
+        "volumeChangeRatePct": 16.8,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T009",
+      "timestamp": "2026-05-20T09:27:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "sell",
+      "orderAmountKRW": 318000,
+      "priceKRW": 5020000,
+      "quantity": 0.063347,
+      "realizedPnlKRW": 18000,
+      "holdingPeriodHours": 145,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.8,
+        "volatilityPct": 2.1,
+        "volumeChangeRatePct": 24.0,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T010",
+      "timestamp": "2026-05-22T21:33:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "sell",
+      "orderAmountKRW": 365000,
+      "priceKRW": 97400000,
+      "quantity": 0.003748,
+      "realizedPnlKRW": 31000,
+      "holdingPeriodHours": 238,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.6,
+        "volatilityPct": 1.8,
+        "volumeChangeRatePct": 19.2,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T011",
+      "timestamp": "2026-05-24T10:20:00+09:00",
+      "coin": "KRW-XRP",
+      "side": "buy",
+      "orderAmountKRW": 260000,
+      "priceKRW": 820,
+      "quantity": 317.073171,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 2.5,
+        "volatilityPct": 2.6,
+        "volumeChangeRatePct": 38.0,
+        "state": "mild_rise"
+      },
+      "scenarioTag": "normal_alt_small"
+    },
+    {
+      "tradeId": "T012",
+      "timestamp": "2026-05-27T20:09:00+09:00",
+      "coin": "KRW-XRP",
+      "side": "sell",
+      "orderAmountKRW": 252000,
+      "priceKRW": 794,
+      "quantity": 317.380353,
+      "realizedPnlKRW": -8000,
+      "holdingPeriodHours": 82,
+      "marketCondition": {
+        "shortTermChangeRatePct": -1.9,
+        "volatilityPct": 2.5,
+        "volumeChangeRatePct": 28.0,
+        "state": "normal_drop"
+      },
+      "scenarioTag": "normal_loss"
+    },
+    {
+      "tradeId": "T013",
+      "timestamp": "2026-05-29T09:44:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 330000,
+      "priceKRW": 96800000,
+      "quantity": 0.003409,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": -0.2,
+        "volatilityPct": 1.2,
+        "volumeChangeRatePct": 5.8,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T014",
+      "timestamp": "2026-06-01T21:22:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "buy",
+      "orderAmountKRW": 310000,
+      "priceKRW": 5110000,
+      "quantity": 0.060665,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.6,
+        "volatilityPct": 1.6,
+        "volumeChangeRatePct": 9.1,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T015",
+      "timestamp": "2026-06-04T10:31:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "sell",
+      "orderAmountKRW": 344000,
+      "priceKRW": 98200000,
+      "quantity": 0.003503,
+      "realizedPnlKRW": 14000,
+      "holdingPeriodHours": 147,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.2,
+        "volatilityPct": 1.7,
+        "volumeChangeRatePct": 15.6,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T016",
+      "timestamp": "2026-06-06T20:58:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "sell",
+      "orderAmountKRW": 298000,
+      "priceKRW": 5040000,
+      "quantity": 0.059127,
+      "realizedPnlKRW": -12000,
+      "holdingPeriodHours": 122,
+      "marketCondition": {
+        "shortTermChangeRatePct": -1.4,
+        "volatilityPct": 2.0,
+        "volumeChangeRatePct": 20.5,
+        "state": "normal_drop"
+      },
+      "scenarioTag": "normal_loss"
+    },
+    {
+      "tradeId": "T017",
+      "timestamp": "2026-06-08T09:25:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 370000,
+      "priceKRW": 98900000,
+      "quantity": 0.003741,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.9,
+        "volatilityPct": 1.5,
+        "volumeChangeRatePct": 12.8,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T018",
+      "timestamp": "2026-06-10T21:40:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "sell",
+      "orderAmountKRW": 382000,
+      "priceKRW": 100100000,
+      "quantity": 0.003816,
+      "realizedPnlKRW": 12000,
+      "holdingPeriodHours": 58,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.0,
+        "volatilityPct": 1.6,
+        "volumeChangeRatePct": 13.2,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T019",
+      "timestamp": "2026-06-12T10:02:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "buy",
+      "orderAmountKRW": 350000,
+      "priceKRW": 5180000,
+      "quantity": 0.067568,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.7,
+        "volatilityPct": 1.4,
+        "volumeChangeRatePct": 10.3,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T020",
+      "timestamp": "2026-06-14T20:16:00+09:00",
+      "coin": "KRW-ADA",
+      "side": "buy",
+      "orderAmountKRW": 290000,
+      "priceKRW": 910,
+      "quantity": 318.681319,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 2.1,
+        "volatilityPct": 2.3,
+        "volumeChangeRatePct": 34.0,
+        "state": "mild_rise"
+      },
+      "scenarioTag": "normal_alt_small"
+    },
+    {
+      "tradeId": "T021",
+      "timestamp": "2026-06-16T09:36:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "sell",
+      "orderAmountKRW": 362000,
+      "priceKRW": 5300000,
+      "quantity": 0.068302,
+      "realizedPnlKRW": 12000,
+      "holdingPeriodHours": 93,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.5,
+        "volatilityPct": 1.9,
+        "volumeChangeRatePct": 18.9,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T022",
+      "timestamp": "2026-06-18T13:42:00+09:00",
+      "coin": "KRW-SOL",
+      "side": "buy",
+      "orderAmountKRW": 980000,
+      "priceKRW": 248000,
+      "quantity": 3.951613,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 7.2,
+        "volatilityPct": 5.8,
+        "volumeChangeRatePct": 185.0,
+        "state": "sharp_rise"
+      },
+      "scenarioTag": "fomo_candidate"
+    },
+    {
+      "tradeId": "T023",
+      "timestamp": "2026-06-18T14:28:00+09:00",
+      "coin": "KRW-SOL",
+      "side": "buy",
+      "orderAmountKRW": 720000,
+      "priceKRW": 256000,
+      "quantity": 2.8125,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 9.1,
+        "volatilityPct": 6.4,
+        "volumeChangeRatePct": 230.0,
+        "state": "sharp_rise"
+      },
+      "scenarioTag": "fomo_candidate"
+    },
+    {
+      "tradeId": "T024",
+      "timestamp": "2026-06-19T09:18:00+09:00",
+      "coin": "KRW-SOL",
+      "side": "sell",
+      "orderAmountKRW": 1580000,
+      "priceKRW": 238000,
+      "quantity": 6.638655,
+      "realizedPnlKRW": -120000,
+      "holdingPeriodHours": 19,
+      "marketCondition": {
+        "shortTermChangeRatePct": -4.2,
+        "volatilityPct": 5.9,
+        "volumeChangeRatePct": 160.0,
+        "state": "sharp_drop"
+      },
+      "scenarioTag": "fomo_after_loss"
+    },
+    {
+      "tradeId": "T025",
+      "timestamp": "2026-06-20T20:51:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 340000,
+      "priceKRW": 99700000,
+      "quantity": 0.00341,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.4,
+        "volatilityPct": 1.3,
+        "volumeChangeRatePct": 6.2,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T026",
+      "timestamp": "2026-06-22T10:12:00+09:00",
+      "coin": "KRW-ETH",
+      "side": "sell",
+      "orderAmountKRW": 1460000,
+      "priceKRW": 4710000,
+      "quantity": 0.309979,
+      "realizedPnlKRW": -210000,
+      "holdingPeriodHours": 241,
+      "marketCondition": {
+        "shortTermChangeRatePct": -7.4,
+        "volatilityPct": 6.8,
+        "volumeChangeRatePct": 210.0,
+        "state": "sharp_drop"
+      },
+      "scenarioTag": "panic_selling_candidate"
+    },
+    {
+      "tradeId": "T027",
+      "timestamp": "2026-06-22T10:31:00+09:00",
+      "coin": "KRW-XRP",
+      "side": "buy",
+      "orderAmountKRW": 1250000,
+      "priceKRW": 865,
+      "quantity": 1445.086705,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 4.9,
+        "volatilityPct": 5.2,
+        "volumeChangeRatePct": 145.0,
+        "state": "sharp_rise"
+      },
+      "scenarioTag": "revenge_trading_candidate"
+    },
+    {
+      "tradeId": "T028",
+      "timestamp": "2026-06-22T11:05:00+09:00",
+      "coin": "KRW-XRP",
+      "side": "sell",
+      "orderAmountKRW": 1180000,
+      "priceKRW": 817,
+      "quantity": 1444.308445,
+      "realizedPnlKRW": -70000,
+      "holdingPeriodHours": 1,
+      "marketCondition": {
+        "shortTermChangeRatePct": -3.8,
+        "volatilityPct": 6.0,
+        "volumeChangeRatePct": 170.0,
+        "state": "sharp_drop"
+      },
+      "scenarioTag": "revenge_trading_loss"
+    },
+    {
+      "tradeId": "T029",
+      "timestamp": "2026-06-24T21:19:00+09:00",
+      "coin": "KRW-BTC",
+      "side": "buy",
+      "orderAmountKRW": 360000,
+      "priceKRW": 100500000,
+      "quantity": 0.003582,
+      "realizedPnlKRW": null,
+      "holdingPeriodHours": null,
+      "marketCondition": {
+        "shortTermChangeRatePct": 0.8,
+        "volatilityPct": 1.6,
+        "volumeChangeRatePct": 12.0,
+        "state": "normal"
+      },
+      "scenarioTag": "normal"
+    },
+    {
+      "tradeId": "T030",
+      "timestamp": "2026-06-26T10:26:00+09:00",
+      "coin": "KRW-ADA",
+      "side": "sell",
+      "orderAmountKRW": 303000,
+      "priceKRW": 951,
+      "quantity": 318.611987,
+      "realizedPnlKRW": 13000,
+      "holdingPeriodHours": 282,
+      "marketCondition": {
+        "shortTermChangeRatePct": 1.9,
+        "volatilityPct": 2.1,
+        "volumeChangeRatePct": 26.0,
+        "state": "normal"
+      },
+      "scenarioTag": "normal_alt_small"
+    }
+  ],
+  "expectedDerivedProfile": {
+    "profileLabels": [
+      {
+        "axis": "order_size",
+        "label": "small_split_with_occasional_spikes",
+        "confidence": 0.78,
+        "evidence": [
+          "Most normal trades are between 260,000 and 390,000 KRW.",
+          "A few trades above 900,000 KRW appear during sharp market moves."
+        ]
+      },
+      {
+        "axis": "preferred_assets",
+        "label": "btc_eth_focused",
+        "confidence": 0.82,
+        "evidence": [
+          "BTC and ETH account for the majority of normal trades.",
+          "Altcoin trades are less frequent and usually smaller except during anomaly scenarios."
+        ]
+      },
+      {
+        "axis": "holding_period",
+        "label": "mid_term",
+        "confidence": 0.71,
+        "evidence": [
+          "Most realized normal trades are held for multiple days.",
+          "Very short holding periods mainly appear during anomaly scenarios."
+        ]
+      },
+      {
+        "axis": "pnl_reactivity",
+        "label": "mostly_wait_after_loss_but_recovery_trade_pattern_observed",
+        "confidence": 0.67,
+        "evidence": [
+          "Normal small losses are not immediately followed by larger re-entry orders.",
+          "On 2026-06-22, a large loss is followed by a larger re-entry within 19 minutes."
+        ]
+      }
+    ]
+  },
+  "demoTriggerScenarios": [
+    {
+      "scenarioId": "S001_current_fomo",
+      "title": "FOMO 가능성: 급등 중인 낯선 코인 대량 매수",
+      "currentOrder": {
+        "timestamp": "2026-06-28T14:20:00+09:00",
+        "coin": "KRW-SOL",
+        "side": "buy",
+        "orderAmountKRW": 1200000,
+        "orderType": "market"
+      },
+      "marketSnapshot": {
+        "shortTermChangeRatePct": 8.2,
+        "volatilityPct": 6.1,
+        "volumeChangeRatePct": 240.0,
+        "state": "sharp_rise"
+      },
+      "expectedAnalysis": {
+        "deviationScore": 84,
+        "interventionLevel": "reflect_delay",
+        "biasCandidates": [
+          {
+            "type": "FOMO",
+            "confidence": 0.76,
+            "evidence": [
+              "The coin rose 8.2% in the short term.",
+              "The order amount is more than 3 times the user's normal order range.",
+              "SOL is not a frequent asset in the user's normal trading pattern."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "S002_current_panic_selling",
+      "title": "Panic Selling 가능성: 급락장에서 보유 ETH 대량 매도",
+      "currentOrder": {
+        "timestamp": "2026-06-28T10:18:00+09:00",
+        "coin": "KRW-ETH",
+        "side": "sell",
+        "orderAmountKRW": 1500000,
+        "orderType": "market",
+        "estimatedPositionSellRatio": 0.82
+      },
+      "marketSnapshot": {
+        "shortTermChangeRatePct": -7.8,
+        "volatilityPct": 7.0,
+        "volumeChangeRatePct": 220.0,
+        "state": "sharp_drop"
+      },
+      "expectedAnalysis": {
+        "deviationScore": 81,
+        "interventionLevel": "reflect_delay",
+        "biasCandidates": [
+          {
+            "type": "Panic Selling",
+            "confidence": 0.73,
+            "evidence": [
+              "ETH fell 7.8% in the short term.",
+              "The order attempts to sell most of the estimated position.",
+              "The order amount is much larger than the user's normal sell size."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "scenarioId": "S003_current_revenge_trading",
+      "title": "Revenge Trading 가능성: 손실 직후 더 큰 금액으로 재진입",
+      "recentContext": {
+        "lastRealizedLossTradeId": "T026",
+        "minutesSinceLoss": 19,
+        "lastLossKRW": -210000
+      },
+      "currentOrder": {
+        "timestamp": "2026-06-22T10:31:00+09:00",
+        "coin": "KRW-XRP",
+        "side": "buy",
+        "orderAmountKRW": 1250000,
+        "orderType": "market"
+      },
+      "marketSnapshot": {
+        "shortTermChangeRatePct": 4.9,
+        "volatilityPct": 5.2,
+        "volumeChangeRatePct": 145.0,
+        "state": "sharp_rise"
+      },
+      "expectedAnalysis": {
+        "deviationScore": 88,
+        "interventionLevel": "reflect_delay",
+        "biasCandidates": [
+          {
+            "type": "Revenge Trading",
+            "confidence": 0.81,
+            "evidence": [
+              "A realized loss occurred 19 minutes before the current order.",
+              "The current order amount is far above the user's normal order range.",
+              "The order follows a short interval that is unusual for the user's normal pattern."
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "uiResultContract": {
+    "deviationScore": 0,
+    "interventionLevel": "none | notice | explain_reflect | reflect_delay",
+    "summary": "Short neutral observation for the user.",
+    "biasCandidates": [
+      {
+        "type": "FOMO | Panic Selling | Revenge Trading | Overconfidence | Loss Aversion",
+        "confidence": 0.0,
+        "evidence": ["Objective evidence sentence 1", "Objective evidence sentence 2"]
+      }
+    ],
+    "reflectQuestion": "이번 거래를 하려는 이유에 가장 가까운 것은 무엇인가요?",
+    "reflectOptions": [
+      "계획했던 거래입니다.",
+      "가격 움직임을 보고 결정했습니다.",
+      "최근 손실을 만회하고 싶었습니다.",
+      "뉴스나 주변 반응을 보고 결정했습니다."
+    ]
+  }
+}

@@ -1,0 +1,1910 @@
+{
+    "schemaVersion":  "0.2",
+    "project":  "AI Mirror - Persona Seed Dataset",
+    "createdAt":  "2026-06-28T13:58:00+09:00",
+    "purpose":  "신규 유저 온보딩에서 선택된 초기 투자 성향 가설을 시스템 기준선으로 적용하기 위한 합성 샘플 거래 데이터",
+    "warning":  "이 데이터는 실제 사용자 과거 거래가 아니라 cold start 완화를 위한 synthetic seed다. 실제 거래 데이터가 쌓이면 영향력을 점진적으로 낮춰야 한다.",
+    "updatePolicy":  {
+                         "zeroToFiveRealTrades":  {
+                                                      "onboardingPersonaWeight":  0.8,
+                                                      "realTradeWeight":  0.2,
+                                                      "note":  "초기 체험 구간"
+                                                  },
+                         "sixToTwentyRealTrades":  {
+                                                       "onboardingPersonaWeight":  0.5,
+                                                       "realTradeWeight":  0.5,
+                                                       "note":  "혼합 추정 구간"
+                                                   },
+                         "twentyOneToFiftyRealTrades":  {
+                                                            "onboardingPersonaWeight":  0.25,
+                                                            "realTradeWeight":  0.75,
+                                                            "note":  "실제 행동 우선 구간"
+                                                        },
+                         "overFiftyRealTrades":  {
+                                                     "onboardingPersonaWeight":  0.1,
+                                                     "realTradeWeight":  0.9,
+                                                     "note":  "실제 행동 기반 구간"
+                                                 }
+                     },
+    "personaAxes":  {
+                        "orderSize":  [
+                                          "소액 분할형",
+                                          "중간 규모형",
+                                          "집중 매수형"
+                                      ],
+                        "tradeFrequency":  [
+                                               "저빈도",
+                                               "규칙적",
+                                               "고빈도"
+                                           ],
+                        "holdingPeriod":  [
+                                              "단기형",
+                                              "중기형",
+                                              "장기형"
+                                          ],
+                        "preferredAssets":  [
+                                                "BTC/ETH 중심",
+                                                "알트 분산형",
+                                                "신규 종목 탐색형"
+                                            ],
+                        "marketReaction":  [
+                                               "관망형",
+                                               "추세 추종형",
+                                               "역추세 진입형"
+                                           ],
+                        "pnlReaction":  [
+                                            "대기형",
+                                            "재진입형",
+                                            "복구 매매형"
+                                        ]
+                    },
+    "personas":  [
+                     {
+                         "personaId":  "stable_accumulator",
+                         "personaNameKo":  "안정 적립형",
+                         "personaRole":  "초기 온보딩에서 안정적인 장기 보유 리듬을 선호한다고 응답한 사용자에게 적용하는 낮은 신뢰도의 기준선",
+                         "source":  "synthetic_persona_seed",
+                         "initialConfidence":  0.45,
+                         "axisProfile":  {
+                                             "orderSize":  "소액 분할형",
+                                             "tradeFrequency":  "저빈도",
+                                             "holdingPeriod":  "장기형",
+                                             "preferredAssets":  "BTC/ETH 중심",
+                                             "marketReaction":  "관망형",
+                                             "pnlReaction":  "대기형"
+                                         },
+                         "baselineTargets":  {
+                                                 "averageOrderAmountKRW":  280000,
+                                                 "weeklyTradeCount":  1.2,
+                                                 "averageHoldingPeriodHours":  520,
+                                                 "preferredCoins":  [
+                                                                        "KRW-BTC",
+                                                                        "KRW-ETH"
+                                                                    ],
+                                                 "lossRetradeWithinOneHourRatio":  0.05,
+                                                 "buyAfterSharpRiseRatio":  0.03,
+                                                 "sellAfterSharpDropRatio":  0.04
+                                             },
+                         "sampleTrades":  [
+                                              {
+                                                  "tradeId":  "SA001",
+                                                  "timestamp":  "2026-05-01T09:20:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  260000,
+                                                  "priceKRW":  92800000,
+                                                  "quantity":  0.00280172,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.6,
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  8,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA002",
+                                                  "timestamp":  "2026-05-08T09:34:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  230000,
+                                                  "priceKRW":  4820000,
+                                                  "quantity":  0.04771784,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-0.5",
+                                                                          "volatilityPct":  1.7,
+                                                                          "volumeChangeRatePct":  10,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA003",
+                                                  "timestamp":  "2026-05-15T21:12:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  300000,
+                                                  "priceKRW":  94400000,
+                                                  "quantity":  0.00317797,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.4,
+                                                                          "volatilityPct":  1.3,
+                                                                          "volumeChangeRatePct":  7.2,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA004",
+                                                  "timestamp":  "2026-05-22T09:41:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  250000,
+                                                  "priceKRW":  4960000,
+                                                  "quantity":  0.05040323,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.8,
+                                                                          "volatilityPct":  1.6,
+                                                                          "volumeChangeRatePct":  9.5,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA005",
+                                                  "timestamp":  "2026-05-29T10:05:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  320000,
+                                                  "priceKRW":  96800000,
+                                                  "quantity":  0.00330579,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-0.3",
+                                                                          "volatilityPct":  1.4,
+                                                                          "volumeChangeRatePct":  6.8,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA006",
+                                                  "timestamp":  "2026-06-05T09:18:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  240000,
+                                                  "priceKRW":  5110000,
+                                                  "quantity":  0.04696673,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.7,
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  9,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA007",
+                                                  "timestamp":  "2026-06-12T09:52:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  310000,
+                                                  "priceKRW":  98900000,
+                                                  "quantity":  0.00313448,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.5,
+                                                                          "volatilityPct":  1.4,
+                                                                          "volumeChangeRatePct":  8.4,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA008",
+                                                  "timestamp":  "2026-06-19T21:07:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  270000,
+                                                  "priceKRW":  5180000,
+                                                  "quantity":  0.05212355,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-0.6",
+                                                                          "volatilityPct":  1.8,
+                                                                          "volumeChangeRatePct":  12.2,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "SA009",
+                                                  "timestamp":  "2026-06-22T10:10:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  245000,
+                                                  "priceKRW":  5040000,
+                                                  "quantity":  0.04861111,
+                                                  "realizedPnlKRW":  "-9000",
+                                                  "holdingPeriodHours":  360,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.1",
+                                                                          "volatilityPct":  2.6,
+                                                                          "volumeChangeRatePct":  35,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "small_loss_wait"
+                                              },
+                                              {
+                                                  "tradeId":  "SA010",
+                                                  "timestamp":  "2026-06-26T09:29:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  338000,
+                                                  "priceKRW":  100100000,
+                                                  "quantity":  0.00337662,
+                                                  "realizedPnlKRW":  18000,
+                                                  "holdingPeriodHours":  570,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.2,
+                                                                          "volatilityPct":  1.6,
+                                                                          "volumeChangeRatePct":  14,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_sell"
+                                              }
+                                          ],
+                         "demoCurrentOrders":  [
+                                                   {
+                                                       "scenarioId":  "SA_NORMAL_001",
+                                                       "title":  "평소 리듬에 가까운 BTC 소액 매수",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T09:30:00+09:00",
+                                                                            "coin":  "KRW-BTC",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  280000,
+                                                                            "orderType":  "limit"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  0.4,
+                                                                              "volatilityPct":  1.3,
+                                                                              "volumeChangeRatePct":  7,
+                                                                              "state":  "normal"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  18,
+                                                                                "interventionLevel":  "none",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "None",
+                                                                                                           "confidence":  0.32,
+                                                                                                           "evidence":  [
+                                                                                                                            "평균 주문 금액과 유사합니다.",
+                                                                                                                            "평소 선호 자산인 BTC 거래입니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   },
+                                                   {
+                                                       "scenarioId":  "SA_TRIGGER_001",
+                                                       "title":  "평소보다 큰 낯선 알트코인 급등 추격 매수",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T14:20:00+09:00",
+                                                                            "coin":  "KRW-SOL",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  1100000,
+                                                                            "orderType":  "market"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  8.4,
+                                                                              "volatilityPct":  6,
+                                                                              "volumeChangeRatePct":  230,
+                                                                              "state":  "sharp_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  88,
+                                                                                "interventionLevel":  "reflect_delay",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "FOMO",
+                                                                                                           "confidence":  0.78,
+                                                                                                           "evidence":  [
+                                                                                                                            "평소 주문 금액보다 약 4배 큽니다.",
+                                                                                                                            "최근 기준선에서 자주 보이지 않던 자산입니다.",
+                                                                                                                            "단기 급등과 거래량 급증이 동시에 관찰됩니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   }
+                                               ]
+                     },
+                     {
+                         "personaId":  "balanced_rebalancer",
+                         "personaNameKo":  "균형 조정형",
+                         "personaRole":  "정기적으로 포트폴리오 비중을 맞추는 사용자를 위한 초기 기준선",
+                         "source":  "synthetic_persona_seed",
+                         "initialConfidence":  0.45,
+                         "axisProfile":  {
+                                             "orderSize":  "중간 규모형",
+                                             "tradeFrequency":  "규칙적",
+                                             "holdingPeriod":  "중기형",
+                                             "preferredAssets":  "BTC/ETH 중심",
+                                             "marketReaction":  "관망형",
+                                             "pnlReaction":  "대기형"
+                                         },
+                         "baselineTargets":  {
+                                                 "averageOrderAmountKRW":  480000,
+                                                 "weeklyTradeCount":  3,
+                                                 "averageHoldingPeriodHours":  180,
+                                                 "preferredCoins":  [
+                                                                        "KRW-BTC",
+                                                                        "KRW-ETH",
+                                                                        "KRW-SOL"
+                                                                    ],
+                                                 "lossRetradeWithinOneHourRatio":  0.08,
+                                                 "buyAfterSharpRiseRatio":  0.1,
+                                                 "sellAfterSharpDropRatio":  0.1
+                                             },
+                         "sampleTrades":  [
+                                              {
+                                                  "tradeId":  "BR001",
+                                                  "timestamp":  "2026-05-01T10:10:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  520000,
+                                                  "priceKRW":  92800000,
+                                                  "quantity":  0.00560345,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.6,
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  8,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "BR002",
+                                                  "timestamp":  "2026-05-03T20:45:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  460000,
+                                                  "priceKRW":  4820000,
+                                                  "quantity":  0.09543568,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-0.3",
+                                                                          "volatilityPct":  1.6,
+                                                                          "volumeChangeRatePct":  9,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "BR003",
+                                                  "timestamp":  "2026-05-08T10:20:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  545000,
+                                                  "priceKRW":  95100000,
+                                                  "quantity":  0.00573081,
+                                                  "realizedPnlKRW":  25000,
+                                                  "holdingPeriodHours":  168,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.4,
+                                                                          "volatilityPct":  1.8,
+                                                                          "volumeChangeRatePct":  16,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_sell"
+                                              },
+                                              {
+                                                  "tradeId":  "BR004",
+                                                  "timestamp":  "2026-05-10T21:15:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  430000,
+                                                  "priceKRW":  4885000,
+                                                  "quantity":  0.08802456,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.2,
+                                                                          "volatilityPct":  1.3,
+                                                                          "volumeChangeRatePct":  6,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "BR005",
+                                                  "timestamp":  "2026-05-15T09:48:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  390000,
+                                                  "priceKRW":  221000,
+                                                  "quantity":  1.76470588,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.1,
+                                                                          "volatilityPct":  2.4,
+                                                                          "volumeChangeRatePct":  32,
+                                                                          "state":  "mild_rise"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_alt"
+                                              },
+                                              {
+                                                  "tradeId":  "BR006",
+                                                  "timestamp":  "2026-05-18T20:30:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  452000,
+                                                  "priceKRW":  5020000,
+                                                  "quantity":  0.09003984,
+                                                  "realizedPnlKRW":  16000,
+                                                  "holdingPeriodHours":  192,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.3,
+                                                                          "volatilityPct":  1.7,
+                                                                          "volumeChangeRatePct":  15,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_sell"
+                                              },
+                                              {
+                                                  "tradeId":  "BR007",
+                                                  "timestamp":  "2026-05-24T10:05:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  500000,
+                                                  "priceKRW":  96800000,
+                                                  "quantity":  0.00516529,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-0.5",
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  8,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "BR008",
+                                                  "timestamp":  "2026-05-29T21:00:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  405000,
+                                                  "priceKRW":  230000,
+                                                  "quantity":  1.76086957,
+                                                  "realizedPnlKRW":  15000,
+                                                  "holdingPeriodHours":  336,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.9,
+                                                                          "volatilityPct":  2.2,
+                                                                          "volumeChangeRatePct":  28,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_sell"
+                                              },
+                                              {
+                                                  "tradeId":  "BR009",
+                                                  "timestamp":  "2026-06-03T09:40:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  470000,
+                                                  "priceKRW":  5110000,
+                                                  "quantity":  0.09197652,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.8,
+                                                                          "volatilityPct":  1.4,
+                                                                          "volumeChangeRatePct":  9,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_buy"
+                                              },
+                                              {
+                                                  "tradeId":  "BR010",
+                                                  "timestamp":  "2026-06-07T20:20:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  515000,
+                                                  "priceKRW":  98200000,
+                                                  "quantity":  0.0052444,
+                                                  "realizedPnlKRW":  18000,
+                                                  "holdingPeriodHours":  240,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.1,
+                                                                          "volatilityPct":  1.6,
+                                                                          "volumeChangeRatePct":  12,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_sell"
+                                              },
+                                              {
+                                                  "tradeId":  "BR011",
+                                                  "timestamp":  "2026-06-14T10:35:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  444000,
+                                                  "priceKRW":  5040000,
+                                                  "quantity":  0.08809524,
+                                                  "realizedPnlKRW":  "-12000",
+                                                  "holdingPeriodHours":  264,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-1.8",
+                                                                          "volatilityPct":  2,
+                                                                          "volumeChangeRatePct":  20,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "small_loss_wait"
+                                              },
+                                              {
+                                                  "tradeId":  "BR012",
+                                                  "timestamp":  "2026-06-20T21:30:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  490000,
+                                                  "priceKRW":  99700000,
+                                                  "quantity":  0.00491474,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.4,
+                                                                          "volatilityPct":  1.3,
+                                                                          "volumeChangeRatePct":  6.2,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "rebalance_buy"
+                                              }
+                                          ],
+                         "demoCurrentOrders":  [
+                                                   {
+                                                       "scenarioId":  "BR_NORMAL_001",
+                                                       "title":  "정기 리밸런싱에 가까운 ETH 매수",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T20:40:00+09:00",
+                                                                            "coin":  "KRW-ETH",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  460000,
+                                                                            "orderType":  "limit"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  0.5,
+                                                                              "volatilityPct":  1.4,
+                                                                              "volumeChangeRatePct":  8,
+                                                                              "state":  "normal"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  22,
+                                                                                "interventionLevel":  "none",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "None",
+                                                                                                           "confidence":  0.32,
+                                                                                                           "evidence":  [
+                                                                                                                            "정상 주문 범위와 유사합니다.",
+                                                                                                                            "최근 거래 리듬과 비슷한 시간대입니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   },
+                                                   {
+                                                       "scenarioId":  "BR_TRIGGER_001",
+                                                       "title":  "균형 조정 리듬을 벗어난 단기 급락 대량 매도",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T10:18:00+09:00",
+                                                                            "coin":  "KRW-BTC",
+                                                                            "side":  "sell",
+                                                                            "orderAmountKRW":  1800000,
+                                                                            "orderType":  "market",
+                                                                            "estimatedPositionSellRatio":  0.78
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  "-7.2",
+                                                                              "volatilityPct":  6.8,
+                                                                              "volumeChangeRatePct":  210,
+                                                                              "state":  "sharp_drop"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  79,
+                                                                                "interventionLevel":  "explain_reflect",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "Panic Selling",
+                                                                                                           "confidence":  0.64,
+                                                                                                           "evidence":  [
+                                                                                                                            "평소 리밸런싱 매도 금액보다 큽니다.",
+                                                                                                                            "단기 급락과 높은 변동성이 관찰됩니다.",
+                                                                                                                            "보유량의 상당 부분을 한 번에 매도하려는 주문입니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   }
+                                               ]
+                     },
+                     {
+                         "personaId":  "cautious_explorer",
+                         "personaNameKo":  "신중 탐색형",
+                         "personaRole":  "소액으로 여러 자산을 탐색하지만 손실 이후에는 대기하는 사용자 기준선",
+                         "source":  "synthetic_persona_seed",
+                         "initialConfidence":  0.45,
+                         "axisProfile":  {
+                                             "orderSize":  "소액 분할형",
+                                             "tradeFrequency":  "규칙적",
+                                             "holdingPeriod":  "중기형",
+                                             "preferredAssets":  "알트 분산형",
+                                             "marketReaction":  "관망형",
+                                             "pnlReaction":  "대기형"
+                                         },
+                         "baselineTargets":  {
+                                                 "averageOrderAmountKRW":  190000,
+                                                 "weeklyTradeCount":  2.5,
+                                                 "averageHoldingPeriodHours":  150,
+                                                 "preferredCoins":  [
+                                                                        "KRW-BTC",
+                                                                        "KRW-ETH",
+                                                                        "KRW-SOL",
+                                                                        "KRW-ADA",
+                                                                        "KRW-XRP"
+                                                                    ],
+                                                 "lossRetradeWithinOneHourRatio":  0.03,
+                                                 "buyAfterSharpRiseRatio":  0.08,
+                                                 "sellAfterSharpDropRatio":  0.07
+                                             },
+                         "sampleTrades":  [
+                                              {
+                                                  "tradeId":  "CE001",
+                                                  "timestamp":  "2026-05-01T21:10:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  210000,
+                                                  "priceKRW":  92800000,
+                                                  "quantity":  0.00226293,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.6,
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  8,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE002",
+                                                  "timestamp":  "2026-05-04T20:24:00+09:00",
+                                                  "coin":  "KRW-ADA",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  160000,
+                                                  "priceKRW":  890,
+                                                  "quantity":  179.7752809,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.8,
+                                                                          "volatilityPct":  2.3,
+                                                                          "volumeChangeRatePct":  28,
+                                                                          "state":  "mild_rise"
+                                                                      },
+                                                  "scenarioTag":  "small_alt_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE003",
+                                                  "timestamp":  "2026-05-08T09:50:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  200000,
+                                                  "priceKRW":  4970000,
+                                                  "quantity":  0.04024145,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.7,
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  9,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE004",
+                                                  "timestamp":  "2026-05-12T20:40:00+09:00",
+                                                  "coin":  "KRW-ADA",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  171000,
+                                                  "priceKRW":  951,
+                                                  "quantity":  179.81072555,
+                                                  "realizedPnlKRW":  11000,
+                                                  "holdingPeriodHours":  190,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.4,
+                                                                          "volatilityPct":  1.9,
+                                                                          "volumeChangeRatePct":  18,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "CE005",
+                                                  "timestamp":  "2026-05-16T10:18:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  150000,
+                                                  "priceKRW":  820,
+                                                  "quantity":  182.92682927,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.2,
+                                                                          "volatilityPct":  2.6,
+                                                                          "volumeChangeRatePct":  36,
+                                                                          "state":  "mild_rise"
+                                                                      },
+                                                  "scenarioTag":  "small_alt_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE006",
+                                                  "timestamp":  "2026-05-22T21:05:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  142000,
+                                                  "priceKRW":  776,
+                                                  "quantity":  182.98969072,
+                                                  "realizedPnlKRW":  "-8000",
+                                                  "holdingPeriodHours":  150,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.4",
+                                                                          "volatilityPct":  2.7,
+                                                                          "volumeChangeRatePct":  34,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "small_loss_wait"
+                                              },
+                                              {
+                                                  "tradeId":  "CE007",
+                                                  "timestamp":  "2026-05-27T20:22:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  180000,
+                                                  "priceKRW":  225000,
+                                                  "quantity":  0.8,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.9,
+                                                                          "volatilityPct":  2,
+                                                                          "volumeChangeRatePct":  15,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_alt_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE008",
+                                                  "timestamp":  "2026-06-01T09:46:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  220000,
+                                                  "priceKRW":  96800000,
+                                                  "quantity":  0.00227273,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-0.3",
+                                                                          "volatilityPct":  1.4,
+                                                                          "volumeChangeRatePct":  7,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE009",
+                                                  "timestamp":  "2026-06-06T21:30:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  187000,
+                                                  "priceKRW":  234000,
+                                                  "quantity":  0.7991453,
+                                                  "realizedPnlKRW":  7000,
+                                                  "holdingPeriodHours":  242,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.2,
+                                                                          "volatilityPct":  2.1,
+                                                                          "volumeChangeRatePct":  20,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "CE010",
+                                                  "timestamp":  "2026-06-11T20:12:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  190000,
+                                                  "priceKRW":  5180000,
+                                                  "quantity":  0.03667954,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.5,
+                                                                          "volatilityPct":  1.4,
+                                                                          "volumeChangeRatePct":  8,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE011",
+                                                  "timestamp":  "2026-06-16T10:40:00+09:00",
+                                                  "coin":  "KRW-ADA",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  170000,
+                                                  "priceKRW":  910,
+                                                  "quantity":  186.81318681,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.1,
+                                                                          "volatilityPct":  1.8,
+                                                                          "volumeChangeRatePct":  16,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_alt_explore"
+                                              },
+                                              {
+                                                  "tradeId":  "CE012",
+                                                  "timestamp":  "2026-06-24T20:55:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  229000,
+                                                  "priceKRW":  100100000,
+                                                  "quantity":  0.00228771,
+                                                  "realizedPnlKRW":  9000,
+                                                  "holdingPeriodHours":  552,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.9,
+                                                                          "volatilityPct":  1.5,
+                                                                          "volumeChangeRatePct":  12,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "small_profit"
+                                              }
+                                          ],
+                         "demoCurrentOrders":  [
+                                                   {
+                                                       "scenarioId":  "CE_NORMAL_001",
+                                                       "title":  "소액 알트 탐색에 가까운 ADA 매수",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T20:30:00+09:00",
+                                                                            "coin":  "KRW-ADA",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  180000,
+                                                                            "orderType":  "limit"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  1.2,
+                                                                              "volatilityPct":  2,
+                                                                              "volumeChangeRatePct":  18,
+                                                                              "state":  "normal"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  26,
+                                                                                "interventionLevel":  "none",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "None",
+                                                                                                           "confidence":  0.32,
+                                                                                                           "evidence":  [
+                                                                                                                            "평소 소액 탐색 주문 범위 안에 있습니다.",
+                                                                                                                            "최근에도 비슷한 규모의 알트코인 탐색 거래가 있었습니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   },
+                                                   {
+                                                       "scenarioId":  "CE_TRIGGER_001",
+                                                       "title":  "신중 탐색 기준선을 벗어난 급등 코인 대량 매수",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T13:50:00+09:00",
+                                                                            "coin":  "KRW-NEAR",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  850000,
+                                                                            "orderType":  "market"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  9,
+                                                                              "volatilityPct":  6.4,
+                                                                              "volumeChangeRatePct":  260,
+                                                                              "state":  "sharp_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  86,
+                                                                                "interventionLevel":  "reflect_delay",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "FOMO",
+                                                                                                           "confidence":  0.78,
+                                                                                                           "evidence":  [
+                                                                                                                            "평소 소액 주문 범위보다 크게 벗어납니다.",
+                                                                                                                            "최근 데이터에 없는 신규 자산입니다.",
+                                                                                                                            "단기 급등과 거래량 급증이 동시에 관찰됩니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   }
+                                               ]
+                     },
+                     {
+                         "personaId":  "trend_responder",
+                         "personaNameKo":  "추세 반응형",
+                         "personaRole":  "상승 신호에 반응하고 짧은 보유 후 차익 실현을 시도하는 사용자 기준선",
+                         "source":  "synthetic_persona_seed",
+                         "initialConfidence":  0.45,
+                         "axisProfile":  {
+                                             "orderSize":  "중간 규모형",
+                                             "tradeFrequency":  "규칙적",
+                                             "holdingPeriod":  "단기형",
+                                             "preferredAssets":  "알트 분산형",
+                                             "marketReaction":  "추세 추종형",
+                                             "pnlReaction":  "재진입형"
+                                         },
+                         "baselineTargets":  {
+                                                 "averageOrderAmountKRW":  650000,
+                                                 "weeklyTradeCount":  4.2,
+                                                 "averageHoldingPeriodHours":  32,
+                                                 "preferredCoins":  [
+                                                                        "KRW-BTC",
+                                                                        "KRW-ETH",
+                                                                        "KRW-SOL",
+                                                                        "KRW-AVAX",
+                                                                        "KRW-NEAR"
+                                                                    ],
+                                                 "lossRetradeWithinOneHourRatio":  0.16,
+                                                 "buyAfterSharpRiseRatio":  0.42,
+                                                 "sellAfterSharpDropRatio":  0.18
+                                             },
+                         "sampleTrades":  [
+                                              {
+                                                  "tradeId":  "OS001",
+                                                  "timestamp":  "2026-05-01T13:15:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  620000,
+                                                  "priceKRW":  218000,
+                                                  "quantity":  2.8440367,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  4.8,
+                                                                          "volatilityPct":  3.8,
+                                                                          "volumeChangeRatePct":  95,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "OS002",
+                                                  "timestamp":  "2026-05-02T10:05:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  661000,
+                                                  "priceKRW":  232000,
+                                                  "quantity":  2.84913793,
+                                                  "realizedPnlKRW":  41000,
+                                                  "holdingPeriodHours":  21,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  3.2,
+                                                                          "volatilityPct":  3.4,
+                                                                          "volumeChangeRatePct":  80,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "quick_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "OS003",
+                                                  "timestamp":  "2026-05-04T14:20:00+09:00",
+                                                  "coin":  "KRW-AVAX",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  580000,
+                                                  "priceKRW":  58000,
+                                                  "quantity":  10,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  5.1,
+                                                                          "volatilityPct":  4.2,
+                                                                          "volumeChangeRatePct":  110,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "OS004",
+                                                  "timestamp":  "2026-05-05T09:35:00+09:00",
+                                                  "coin":  "KRW-AVAX",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  552000,
+                                                  "priceKRW":  55200,
+                                                  "quantity":  10,
+                                                  "realizedPnlKRW":  "-28000",
+                                                  "holdingPeriodHours":  19,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.8",
+                                                                          "volatilityPct":  4.6,
+                                                                          "volumeChangeRatePct":  100,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "fast_cut_loss"
+                                              },
+                                              {
+                                                  "tradeId":  "OS005",
+                                                  "timestamp":  "2026-05-08T13:00:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  680000,
+                                                  "priceKRW":  4970000,
+                                                  "quantity":  0.13682093,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  3.9,
+                                                                          "volatilityPct":  3,
+                                                                          "volumeChangeRatePct":  70,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "OS006",
+                                                  "timestamp":  "2026-05-09T12:10:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  714000,
+                                                  "priceKRW":  5220000,
+                                                  "quantity":  0.13678161,
+                                                  "realizedPnlKRW":  34000,
+                                                  "holdingPeriodHours":  23,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.6,
+                                                                          "volatilityPct":  2.8,
+                                                                          "volumeChangeRatePct":  56,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "quick_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "OS007",
+                                                  "timestamp":  "2026-05-13T14:45:00+09:00",
+                                                  "coin":  "KRW-NEAR",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  640000,
+                                                  "priceKRW":  9800,
+                                                  "quantity":  65.30612245,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  6.5,
+                                                                          "volatilityPct":  5.2,
+                                                                          "volumeChangeRatePct":  160,
+                                                                          "state":  "sharp_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "OS008",
+                                                  "timestamp":  "2026-05-14T10:05:00+09:00",
+                                                  "coin":  "KRW-NEAR",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  691000,
+                                                  "priceKRW":  10580,
+                                                  "quantity":  65.31190926,
+                                                  "realizedPnlKRW":  51000,
+                                                  "holdingPeriodHours":  20,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  4,
+                                                                          "volatilityPct":  4.9,
+                                                                          "volumeChangeRatePct":  130,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "quick_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "OS009",
+                                                  "timestamp":  "2026-05-20T15:00:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  700000,
+                                                  "priceKRW":  97400000,
+                                                  "quantity":  0.00718686,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  3.5,
+                                                                          "volatilityPct":  2.9,
+                                                                          "volumeChangeRatePct":  66,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "OS010",
+                                                  "timestamp":  "2026-05-22T09:30:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  721000,
+                                                  "priceKRW":  100100000,
+                                                  "quantity":  0.0072028,
+                                                  "realizedPnlKRW":  21000,
+                                                  "holdingPeriodHours":  42,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.8,
+                                                                          "volatilityPct":  2,
+                                                                          "volumeChangeRatePct":  25,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "quick_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "OS011",
+                                                  "timestamp":  "2026-06-03T13:22:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  760000,
+                                                  "priceKRW":  248000,
+                                                  "quantity":  3.06451613,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  6.8,
+                                                                          "volatilityPct":  5.6,
+                                                                          "volumeChangeRatePct":  180,
+                                                                          "state":  "sharp_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "OS012",
+                                                  "timestamp":  "2026-06-04T10:15:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  713000,
+                                                  "priceKRW":  232500,
+                                                  "quantity":  3.06666667,
+                                                  "realizedPnlKRW":  "-47000",
+                                                  "holdingPeriodHours":  21,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-3.9",
+                                                                          "volatilityPct":  5.8,
+                                                                          "volumeChangeRatePct":  160,
+                                                                          "state":  "sharp_drop"
+                                                                      },
+                                                  "scenarioTag":  "fast_cut_loss"
+                                              }
+                                          ],
+                         "demoCurrentOrders":  [
+                                                   {
+                                                       "scenarioId":  "OS_NORMAL_001",
+                                                       "title":  "평소 패턴에 가까운 상승장 단기 진입",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T13:25:00+09:00",
+                                                                            "coin":  "KRW-SOL",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  670000,
+                                                                            "orderType":  "market"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  4.5,
+                                                                              "volatilityPct":  4,
+                                                                              "volumeChangeRatePct":  120,
+                                                                              "state":  "strong_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  38,
+                                                                                "interventionLevel":  "none",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "None",
+                                                                                                           "confidence":  0.32,
+                                                                                                           "evidence":  [
+                                                                                                                            "상승 반응형 거래가 평소에도 관찰됩니다.",
+                                                                                                                            "주문 금액이 기준선과 크게 다르지 않습니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   },
+                                                   {
+                                                       "scenarioId":  "OS_TRIGGER_001",
+                                                       "title":  "추세 반응형 기준선도 넘어서는 과대 확신성 대형 주문",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T13:44:00+09:00",
+                                                                            "coin":  "KRW-NEAR",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  2100000,
+                                                                            "orderType":  "market"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  10.2,
+                                                                              "volatilityPct":  7.1,
+                                                                              "volumeChangeRatePct":  310,
+                                                                              "state":  "sharp_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  82,
+                                                                                "interventionLevel":  "reflect_delay",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "Overconfidence",
+                                                                                                           "confidence":  0.78,
+                                                                                                           "evidence":  [
+                                                                                                                            "평소에도 상승장 진입이 있으나 이번 주문 규모는 기준선보다 큽니다.",
+                                                                                                                            "최근 수익 이후 주문 규모가 급격히 커진 조건과 유사합니다.",
+                                                                                                                            "시장 변동성과 거래량이 높습니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   }
+                                               ]
+                     },
+                     {
+                         "personaId":  "volatility_responder",
+                         "personaNameKo":  "변동성 대응형",
+                         "personaRole":  "짧은 간격으로 시장 변동에 대응하는 고빈도 단기 거래 기준선",
+                         "source":  "synthetic_persona_seed",
+                         "initialConfidence":  0.45,
+                         "axisProfile":  {
+                                             "orderSize":  "중간 규모형",
+                                             "tradeFrequency":  "고빈도",
+                                             "holdingPeriod":  "단기형",
+                                             "preferredAssets":  "알트 분산형",
+                                             "marketReaction":  "추세 추종형",
+                                             "pnlReaction":  "재진입형"
+                                         },
+                         "baselineTargets":  {
+                                                 "averageOrderAmountKRW":  320000,
+                                                 "weeklyTradeCount":  9.5,
+                                                 "averageHoldingPeriodHours":  7,
+                                                 "preferredCoins":  [
+                                                                        "KRW-BTC",
+                                                                        "KRW-ETH",
+                                                                        "KRW-XRP",
+                                                                        "KRW-SOL",
+                                                                        "KRW-ADA"
+                                                                    ],
+                                                 "lossRetradeWithinOneHourRatio":  0.22,
+                                                 "buyAfterSharpRiseRatio":  0.35,
+                                                 "sellAfterSharpDropRatio":  0.34
+                                             },
+                         "sampleTrades":  [
+                                              {
+                                                  "tradeId":  "RR001",
+                                                  "timestamp":  "2026-06-01T09:10:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  280000,
+                                                  "priceKRW":  820,
+                                                  "quantity":  341.46341463,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  3.5,
+                                                                          "volatilityPct":  3.6,
+                                                                          "volumeChangeRatePct":  80,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "fast_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RR002",
+                                                  "timestamp":  "2026-06-01T13:25:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  291000,
+                                                  "priceKRW":  852,
+                                                  "quantity":  341.54929577,
+                                                  "realizedPnlKRW":  11000,
+                                                  "holdingPeriodHours":  4,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.2,
+                                                                          "volatilityPct":  3.2,
+                                                                          "volumeChangeRatePct":  60,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "fast_exit"
+                                              },
+                                              {
+                                                  "tradeId":  "RR003",
+                                                  "timestamp":  "2026-06-03T10:05:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  330000,
+                                                  "priceKRW":  231000,
+                                                  "quantity":  1.42857143,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  4.2,
+                                                                          "volatilityPct":  4,
+                                                                          "volumeChangeRatePct":  100,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "fast_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RR004",
+                                                  "timestamp":  "2026-06-03T18:40:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  318000,
+                                                  "priceKRW":  222500,
+                                                  "quantity":  1.42921348,
+                                                  "realizedPnlKRW":  "-12000",
+                                                  "holdingPeriodHours":  9,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.1",
+                                                                          "volatilityPct":  4.3,
+                                                                          "volumeChangeRatePct":  98,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "fast_exit_loss"
+                                              },
+                                              {
+                                                  "tradeId":  "RR005",
+                                                  "timestamp":  "2026-06-05T09:45:00+09:00",
+                                                  "coin":  "KRW-ADA",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  260000,
+                                                  "priceKRW":  910,
+                                                  "quantity":  285.71428571,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.8,
+                                                                          "volatilityPct":  3.1,
+                                                                          "volumeChangeRatePct":  70,
+                                                                          "state":  "mild_rise"
+                                                                      },
+                                                  "scenarioTag":  "fast_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RR006",
+                                                  "timestamp":  "2026-06-05T15:20:00+09:00",
+                                                  "coin":  "KRW-ADA",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  269000,
+                                                  "priceKRW":  942,
+                                                  "quantity":  285.5626327,
+                                                  "realizedPnlKRW":  9000,
+                                                  "holdingPeriodHours":  6,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.5,
+                                                                          "volatilityPct":  2.8,
+                                                                          "volumeChangeRatePct":  45,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "fast_exit"
+                                              },
+                                              {
+                                                  "tradeId":  "RR007",
+                                                  "timestamp":  "2026-06-08T10:30:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  380000,
+                                                  "priceKRW":  98900000,
+                                                  "quantity":  0.00384226,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.4,
+                                                                          "volatilityPct":  2.5,
+                                                                          "volumeChangeRatePct":  45,
+                                                                          "state":  "mild_rise"
+                                                                      },
+                                                  "scenarioTag":  "fast_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RR008",
+                                                  "timestamp":  "2026-06-08T16:05:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  386000,
+                                                  "priceKRW":  100500000,
+                                                  "quantity":  0.0038408,
+                                                  "realizedPnlKRW":  6000,
+                                                  "holdingPeriodHours":  6,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.1,
+                                                                          "volatilityPct":  1.9,
+                                                                          "volumeChangeRatePct":  22,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "fast_exit"
+                                              },
+                                              {
+                                                  "tradeId":  "RR009",
+                                                  "timestamp":  "2026-06-12T09:22:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  350000,
+                                                  "priceKRW":  5180000,
+                                                  "quantity":  0.06756757,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.2",
+                                                                          "volatilityPct":  3.5,
+                                                                          "volumeChangeRatePct":  70,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "volatility_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RR010",
+                                                  "timestamp":  "2026-06-12T12:55:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  343000,
+                                                  "priceKRW":  5070000,
+                                                  "quantity":  0.06765286,
+                                                  "realizedPnlKRW":  "-7000",
+                                                  "holdingPeriodHours":  4,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-1.6",
+                                                                          "volatilityPct":  3.2,
+                                                                          "volumeChangeRatePct":  65,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "fast_exit_loss"
+                                              },
+                                              {
+                                                  "tradeId":  "RR011",
+                                                  "timestamp":  "2026-06-16T11:15:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  410000,
+                                                  "priceKRW":  248000,
+                                                  "quantity":  1.65322581,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  5.5,
+                                                                          "volatilityPct":  5.1,
+                                                                          "volumeChangeRatePct":  150,
+                                                                          "state":  "sharp_rise"
+                                                                      },
+                                                  "scenarioTag":  "fast_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RR012",
+                                                  "timestamp":  "2026-06-16T17:00:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  428000,
+                                                  "priceKRW":  259000,
+                                                  "quantity":  1.65250965,
+                                                  "realizedPnlKRW":  18000,
+                                                  "holdingPeriodHours":  6,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.6,
+                                                                          "volatilityPct":  4.4,
+                                                                          "volumeChangeRatePct":  120,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "fast_exit"
+                                              }
+                                          ],
+                         "demoCurrentOrders":  [
+                                                   {
+                                                       "scenarioId":  "RR_NORMAL_001",
+                                                       "title":  "변동성 대응형 기준선에 가까운 당일 매매",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T11:15:00+09:00",
+                                                                            "coin":  "KRW-XRP",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  340000,
+                                                                            "orderType":  "market"
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  3.2,
+                                                                              "volatilityPct":  3.6,
+                                                                              "volumeChangeRatePct":  85,
+                                                                              "state":  "strong_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  35,
+                                                                                "interventionLevel":  "none",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "None",
+                                                                                                           "confidence":  0.32,
+                                                                                                           "evidence":  [
+                                                                                                                            "짧은 대응 거래가 평소에도 자주 관찰됩니다.",
+                                                                                                                            "주문 금액이 기준선과 크게 다르지 않습니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   },
+                                                   {
+                                                       "scenarioId":  "RR_TRIGGER_001",
+                                                       "title":  "고빈도 사용자에게도 과도한 연속 대형 주문",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T11:43:00+09:00",
+                                                                            "coin":  "KRW-SOL",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  1300000,
+                                                                            "orderType":  "market",
+                                                                            "sameDayOrderCount":  8
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  7.4,
+                                                                              "volatilityPct":  6.5,
+                                                                              "volumeChangeRatePct":  250,
+                                                                              "state":  "sharp_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  83,
+                                                                                "interventionLevel":  "reflect_delay",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "Overconfidence",
+                                                                                                           "confidence":  0.78,
+                                                                                                           "evidence":  [
+                                                                                                                            "오늘 거래 횟수가 평소 고빈도 기준선보다도 높습니다.",
+                                                                                                                            "주문 금액이 평소보다 크게 큽니다.",
+                                                                                                                            "급등장과 높은 변동성이 동시에 관찰됩니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   }
+                                               ]
+                     },
+                     {
+                         "personaId":  "recovery_sensitive",
+                         "personaNameKo":  "복구 민감형",
+                         "personaRole":  "손실 이후 짧은 시간 안에 재진입하거나 주문 규모가 커지는 경향을 가진 사용자 기준선",
+                         "source":  "synthetic_persona_seed",
+                         "initialConfidence":  0.45,
+                         "axisProfile":  {
+                                             "orderSize":  "집중 매수형",
+                                             "tradeFrequency":  "고빈도",
+                                             "holdingPeriod":  "단기형",
+                                             "preferredAssets":  "알트 분산형",
+                                             "marketReaction":  "추세 추종형",
+                                             "pnlReaction":  "복구 매매형"
+                                         },
+                         "baselineTargets":  {
+                                                 "averageOrderAmountKRW":  520000,
+                                                 "weeklyTradeCount":  5.5,
+                                                 "averageHoldingPeriodHours":  28,
+                                                 "preferredCoins":  [
+                                                                        "KRW-BTC",
+                                                                        "KRW-ETH",
+                                                                        "KRW-XRP",
+                                                                        "KRW-SOL"
+                                                                    ],
+                                                 "lossRetradeWithinOneHourRatio":  0.55,
+                                                 "buyAfterSharpRiseRatio":  0.3,
+                                                 "sellAfterSharpDropRatio":  0.28
+                                             },
+                         "sampleTrades":  [
+                                              {
+                                                  "tradeId":  "RC001",
+                                                  "timestamp":  "2026-05-03T10:00:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  420000,
+                                                  "priceKRW":  4820000,
+                                                  "quantity":  0.08713693,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1.2,
+                                                                          "volatilityPct":  2,
+                                                                          "volumeChangeRatePct":  20,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RC002",
+                                                  "timestamp":  "2026-05-04T09:15:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  398000,
+                                                  "priceKRW":  4560000,
+                                                  "quantity":  0.0872807,
+                                                  "realizedPnlKRW":  "-22000",
+                                                  "holdingPeriodHours":  23,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.9",
+                                                                          "volatilityPct":  3.4,
+                                                                          "volumeChangeRatePct":  65,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "loss_exit"
+                                              },
+                                              {
+                                                  "tradeId":  "RC003",
+                                                  "timestamp":  "2026-05-04T09:42:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  760000,
+                                                  "priceKRW":  840,
+                                                  "quantity":  904.76190476,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  4.8,
+                                                                          "volatilityPct":  4.6,
+                                                                          "volumeChangeRatePct":  130,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "loss_reentry_larger"
+                                              },
+                                              {
+                                                  "tradeId":  "RC004",
+                                                  "timestamp":  "2026-05-04T16:20:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  789000,
+                                                  "priceKRW":  872,
+                                                  "quantity":  904.81651376,
+                                                  "realizedPnlKRW":  29000,
+                                                  "holdingPeriodHours":  7,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.1,
+                                                                          "volatilityPct":  3.8,
+                                                                          "volumeChangeRatePct":  90,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "recovery_profit"
+                                              },
+                                              {
+                                                  "tradeId":  "RC005",
+                                                  "timestamp":  "2026-05-10T21:30:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  480000,
+                                                  "priceKRW":  95100000,
+                                                  "quantity":  0.00504732,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  0.8,
+                                                                          "volatilityPct":  1.8,
+                                                                          "volumeChangeRatePct":  15,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RC006",
+                                                  "timestamp":  "2026-05-12T10:10:00+09:00",
+                                                  "coin":  "KRW-BTC",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  462000,
+                                                  "priceKRW":  91600000,
+                                                  "quantity":  0.00504367,
+                                                  "realizedPnlKRW":  "-18000",
+                                                  "holdingPeriodHours":  37,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-2.4",
+                                                                          "volatilityPct":  3,
+                                                                          "volumeChangeRatePct":  55,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "loss_exit"
+                                              },
+                                              {
+                                                  "tradeId":  "RC007",
+                                                  "timestamp":  "2026-05-12T10:35:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  890000,
+                                                  "priceKRW":  225000,
+                                                  "quantity":  3.95555556,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  5.2,
+                                                                          "volatilityPct":  4.9,
+                                                                          "volumeChangeRatePct":  145,
+                                                                          "state":  "sharp_rise"
+                                                                      },
+                                                  "scenarioTag":  "loss_reentry_larger"
+                                              },
+                                              {
+                                                  "tradeId":  "RC008",
+                                                  "timestamp":  "2026-05-13T09:20:00+09:00",
+                                                  "coin":  "KRW-SOL",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  845000,
+                                                  "priceKRW":  213500,
+                                                  "quantity":  3.95784543,
+                                                  "realizedPnlKRW":  "-45000",
+                                                  "holdingPeriodHours":  23,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-3.7",
+                                                                          "volatilityPct":  5.3,
+                                                                          "volumeChangeRatePct":  150,
+                                                                          "state":  "sharp_drop"
+                                                                      },
+                                                  "scenarioTag":  "second_loss"
+                                              },
+                                              {
+                                                  "tradeId":  "RC009",
+                                                  "timestamp":  "2026-05-18T14:05:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  390000,
+                                                  "priceKRW":  5020000,
+                                                  "quantity":  0.07768924,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  1,
+                                                                          "volatilityPct":  1.9,
+                                                                          "volumeChangeRatePct":  18,
+                                                                          "state":  "normal"
+                                                                      },
+                                                  "scenarioTag":  "baseline_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RC010",
+                                                  "timestamp":  "2026-05-20T11:10:00+09:00",
+                                                  "coin":  "KRW-ETH",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  426000,
+                                                  "priceKRW":  5480000,
+                                                  "quantity":  0.07773723,
+                                                  "realizedPnlKRW":  36000,
+                                                  "holdingPeriodHours":  45,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  2.2,
+                                                                          "volatilityPct":  2.4,
+                                                                          "volumeChangeRatePct":  40,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "profit_exit"
+                                              },
+                                              {
+                                                  "tradeId":  "RC011",
+                                                  "timestamp":  "2026-06-01T13:30:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "buy",
+                                                  "orderAmountKRW":  650000,
+                                                  "priceKRW":  860,
+                                                  "quantity":  755.81395349,
+                                                  "realizedPnlKRW":  null,
+                                                  "holdingPeriodHours":  null,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  4.2,
+                                                                          "volatilityPct":  4,
+                                                                          "volumeChangeRatePct":  120,
+                                                                          "state":  "strong_rise"
+                                                                      },
+                                                  "scenarioTag":  "uptrend_entry"
+                                              },
+                                              {
+                                                  "tradeId":  "RC012",
+                                                  "timestamp":  "2026-06-02T09:30:00+09:00",
+                                                  "coin":  "KRW-XRP",
+                                                  "side":  "sell",
+                                                  "orderAmountKRW":  618000,
+                                                  "priceKRW":  818,
+                                                  "quantity":  755.50122249,
+                                                  "realizedPnlKRW":  "-32000",
+                                                  "holdingPeriodHours":  20,
+                                                  "marketCondition":  {
+                                                                          "shortTermChangeRatePct":  "-3.2",
+                                                                          "volatilityPct":  4.7,
+                                                                          "volumeChangeRatePct":  135,
+                                                                          "state":  "normal_drop"
+                                                                      },
+                                                  "scenarioTag":  "loss_exit"
+                                              }
+                                          ],
+                         "demoCurrentOrders":  [
+                                                   {
+                                                       "scenarioId":  "RC_NORMAL_001",
+                                                       "title":  "복구 민감형 기준선 안의 중간 규모 재진입",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T10:40:00+09:00",
+                                                                            "coin":  "KRW-XRP",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  620000,
+                                                                            "orderType":  "market",
+                                                                            "minutesSinceLoss":  55
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  3.8,
+                                                                              "volatilityPct":  4,
+                                                                              "volumeChangeRatePct":  100,
+                                                                              "state":  "strong_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  52,
+                                                                                "interventionLevel":  "notice",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "Revenge Trading",
+                                                                                                           "confidence":  0.32,
+                                                                                                           "evidence":  [
+                                                                                                                            "손실 이후 재진입이 기준선에서도 일부 관찰됩니다.",
+                                                                                                                            "주문 금액은 기준선 범위에 가깝습니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   },
+                                                   {
+                                                       "scenarioId":  "RC_TRIGGER_001",
+                                                       "title":  "손실 직후 기준선보다 더 큰 금액으로 재진입",
+                                                       "currentOrder":  {
+                                                                            "timestamp":  "2026-06-28T10:27:00+09:00",
+                                                                            "coin":  "KRW-SOL",
+                                                                            "side":  "buy",
+                                                                            "orderAmountKRW":  1800000,
+                                                                            "orderType":  "market",
+                                                                            "minutesSinceLoss":  12,
+                                                                            "lastLossKRW":  -260000
+                                                                        },
+                                                       "marketSnapshot":  {
+                                                                              "shortTermChangeRatePct":  6.2,
+                                                                              "volatilityPct":  5.7,
+                                                                              "volumeChangeRatePct":  190,
+                                                                              "state":  "sharp_rise"
+                                                                          },
+                                                       "expectedAnalysis":  {
+                                                                                "deviationScore":  86,
+                                                                                "interventionLevel":  "reflect_delay",
+                                                                                "biasCandidates":  [
+                                                                                                       {
+                                                                                                           "type":  "Revenge Trading",
+                                                                                                           "confidence":  0.78,
+                                                                                                           "evidence":  [
+                                                                                                                            "손실 거래 이후 12분 만에 재주문이 입력되었습니다.",
+                                                                                                                            "이 페르소나 기준선보다도 주문 금액이 큽니다.",
+                                                                                                                            "급등장 조건과 손실 만회성 재진입 조건이 함께 관찰됩니다."
+                                                                                                                        ]
+                                                                                                       }
+                                                                                                   ]
+                                                                            }
+                                                   }
+                                               ]
+                     }
+                 ],
+    "uiContractHint":  {
+                           "personaId":  "selected persona id",
+                           "baselineConfidence":  "starts low and decays as real trade data accumulates",
+                           "sampleTrades":  "used only to initialize behavioral baseline, not shown as actual user history",
+                           "demoCurrentOrders":  "used to test none, notice, explain_reflect, reflect_delay interventions"
+                       }
+}
