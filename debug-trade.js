@@ -1,13 +1,14 @@
-/* Standalone mock trading window for AI Mirror debugging. */
+/* Standalone mock trading window for mIrror debugging. */
 (function(){
   'use strict';
 
-  const STORE_KEY = 'aiMirror.state.v1';
-  const PERSONA_KEY = 'aiMirror.persona.v1';
-  const DEBUG_STORE_KEY = 'aiMirror.debugTrade.state.v1';
-  const DEBUG_PERSONA_KEY = 'aiMirror.debugTrade.persona.v1';
-  const DEBUG_USE_PROD_KEY = 'aiMirror.debugTrade.useProductionState';
-  const DEBUG_CLOCK_KEY = 'aiMirror.debugTrade.clockOffsetMs';
+  const STORE_KEY = 'mIrror.state.v1';
+  const PERSONA_KEY = 'mIrror.persona.v1';
+  const ONBOARDING_RESULT_KEY = 'mIrror.onboardingResult.v1';
+  const DEBUG_STORE_KEY = 'mIrror.debugTrade.state.v1';
+  const DEBUG_PERSONA_KEY = 'mIrror.debugTrade.persona.v1';
+  const DEBUG_USE_PROD_KEY = 'mIrror.debugTrade.useProductionState';
+  const DEBUG_CLOCK_KEY = 'mIrror.debugTrade.clockOffsetMs';
   const DEFAULT_PERSONA = 'balanced_rebalancer';
   const ONE_DAY = 24 * 60 * 60 * 1000;
   const BASE_PRICE = { BTC:100100000, ETH:5040000, SOL:248000, XRP:865, ADA:951, NEAR:10580, AVAX:58000, DOGE:210, XYZ:1240 };
@@ -21,6 +22,7 @@
   let lastEval = null;
   let lastScenario = null;
   let scenarioMap = new Map();
+  let currentOnboardingResult = null;
   let applying = false;
 
   const $ = (id) => document.getElementById(id);
@@ -63,10 +65,10 @@
     return String(v || '').replace(/^KRW-?/i, '').replace(/[^A-Z0-9]/gi, '').toUpperCase() || 'ETH';
   }
   function personaName(id) {
-    return globalThis.AI_MIRROR_PERSONA_SEED_DATASET?.personas?.find(p => p.personaId === id)?.personaNameKo || id;
+    return globalThis.MIRROR_PERSONA_SEED_DATASET?.personas?.find(p => p.personaId === id)?.personaNameKo || id;
   }
   function seedPersona(id) {
-    return globalThis.AI_MIRROR_PERSONA_SEED_DATASET?.personas?.find(p => p.personaId === id) || null;
+    return globalThis.MIRROR_PERSONA_SEED_DATASET?.personas?.find(p => p.personaId === id) || null;
   }
   function volRatio(snapshot) {
     const pct = Number(snapshot?.volumeChangeRatePct || 0);
@@ -80,12 +82,14 @@
   }
 
   async function loadState() {
-    const data = await storageGet([STORE_KEY, PERSONA_KEY, DEBUG_STORE_KEY, DEBUG_PERSONA_KEY, DEBUG_USE_PROD_KEY, DEBUG_CLOCK_KEY]);
+    const data = await storageGet([STORE_KEY, PERSONA_KEY, ONBOARDING_RESULT_KEY, DEBUG_STORE_KEY, DEBUG_PERSONA_KEY, DEBUG_USE_PROD_KEY, DEBUG_CLOCK_KEY]);
     useProduction = !!data[DEBUG_USE_PROD_KEY];
     clockOffset = Number(data[DEBUG_CLOCK_KEY] || 0);
     const wantedPersona = useProduction ? (data[PERSONA_KEY] || data[DEBUG_PERSONA_KEY] || DEFAULT_PERSONA) : (data[DEBUG_PERSONA_KEY] || data[PERSONA_KEY] || DEFAULT_PERSONA);
     const loadedState = useProduction ? data[STORE_KEY] : data[DEBUG_STORE_KEY];
-    engine = new MirrorEngine(loadedState || null, wantedPersona, now);
+    currentOnboardingResult = data[ONBOARDING_RESULT_KEY] || null;
+    const opts = useProduction ? { onboardingResult: currentOnboardingResult } : {};
+    engine = new MirrorEngine(loadedState || null, wantedPersona, now, opts);
     personaId = engine.state.personaId || wantedPersona;
   }
   async function saveState() {
@@ -115,7 +119,7 @@
       personaScenarios.forEach((s, i) => addScenario(group, `persona:${i}`, s, 'persona_seed_dataset'));
       sel.appendChild(group);
     }
-    const demoScenarios = globalThis.AI_MIRROR_DEMO_SEED_USER_A?.demoTriggerScenarios || [];
+    const demoScenarios = globalThis.MIRROR_DEMO_SEED_USER_A?.demoTriggerScenarios || [];
     if (demoScenarios.length) {
       const group = document.createElement('optgroup');
       group.label = 'user_a 트리거 시나리오';
@@ -140,7 +144,7 @@
     const order = s?.currentOrder || {};
     const lossKRW = Number(ctx.lastLossKRW ?? order.lastLossKRW ?? 0);
     const tradeId = ctx.lastRealizedLossTradeId;
-    const lossTrade = (globalThis.AI_MIRROR_DEMO_SEED_USER_A?.historicalTrades || []).find(t => t.tradeId === tradeId);
+    const lossTrade = (globalThis.MIRROR_DEMO_SEED_USER_A?.historicalTrades || []).find(t => t.tradeId === tradeId);
     if (lossTrade && Number(lossTrade.orderAmountKRW)) return round(lossKRW / Number(lossTrade.orderAmountKRW) * 100, 1);
     if (lossKRW && Number(order.orderAmountKRW)) return round(lossKRW / Number(order.orderAmountKRW) * 100, 1);
     return -6.2;
@@ -168,6 +172,8 @@
     $('symbolInput').value = sym;
     $('orderTypeInput').value = order.orderType === 'limit' ? 'limit' : 'market';
     $('amountInput').value = Number(order.orderAmountKRW || 0);
+    const scenarioPrice = Number(order.priceKRW || 0) || Math.round((BASE_PRICE[sym] || BASE_PRICE.XYZ) * (1 + Number(snap.shortTermChangeRatePct || 0) / 100));
+    $('priceInput').value = scenarioPrice;
     $('holdInput').value = order.side === 'sell' ? 3 : 1;
     $('changeInput').value = round(Number(snap.shortTermChangeRatePct || 0), 1);
     $('volumeInput').value = round(volRatio(snap), 2);
@@ -192,12 +198,14 @@
     return {
       symbol: coin($('symbolInput').value),
       amount: Math.max(0, Number($('amountInput').value) || 0),
+      priceKRW: Math.max(0, Number($('priceInput').value) || 0) || null,
       side,
       intendedHoldDays: $('holdInput').value === '' ? null : Math.max(0, Number($('holdInput').value) || 0),
       changePct: Number($('changeInput').value) || 0,
       volumeRatio: Math.max(0.1, Number($('volumeInput').value) || 1),
       resultPct: resultRaw === '' ? null : Number(resultRaw),
       orderType: $('orderTypeInput').value,
+      quantity: (Math.max(0, Number($('priceInput').value) || 0) && Math.max(0, Number($('amountInput').value) || 0)) ? Math.max(0, Number($('amountInput').value) || 0) / Math.max(0, Number($('priceInput').value) || 0) : null,
       estimatedPositionSellRatio: sellRatioRaw === '' ? null : Number(sellRatioRaw),
     };
   }
@@ -211,7 +219,7 @@
   function renderMarket() {
     const t = readTrade();
     const m = engine.marketState(t.symbol, t.changePct, t.volumeRatio);
-    const price = (BASE_PRICE[t.symbol] || BASE_PRICE.XYZ) * (1 + t.changePct / 100);
+    const price = t.priceKRW || ((BASE_PRICE[t.symbol] || BASE_PRICE.XYZ) * (1 + t.changePct / 100));
     $('marketSymbol').textContent = `KRW-${t.symbol}`;
     $('marketPrice').textContent = krw(price);
     $('marketChange').textContent = `${t.changePct > 0 ? '+' : ''}${round(t.changePct, 1)}%`;
@@ -284,7 +292,7 @@
     const exp = lastScenario?.expectedAnalysis;
     const compare = exp ? `<div class="compare"><div><b>프리셋 기대값</b>점수 ${exp.deviationScore ?? '—'} · 단계 ${expectedStage(exp.interventionLevel)}</div><div><b>현재 엔진 계산값</b>점수 ${r.score} · 단계 ${r.stage}</div></div>` : '';
     $('resultPanel').className = '';
-    $('resultPanel').innerHTML = `<div class="result-card"><div class="score-top"><div class="gauge" style="--score:${r.score}"><b>${r.score}</b></div><div><div class="stage">${stageLabel(r.stage)}</div><div class="summary">${stageSummary(r)}<br>신뢰도 ${r.confidence} · regime ${r.market.regime} · effN ${round(r.baseline.effN, 2)}</div></div></div><ul class="reasons">${reasons}</ul><div class="chips">${chips}</div>${compare}</div><div class="result-card"><div class="stage">입력 주문</div><div class="summary">${t.side === 'buy' ? '매수' : '매도'} · KRW-${t.symbol} · ${krw(t.amount)} · ${t.orderType === 'limit' ? '지정가' : '시장가'} · 변동률 ${t.changePct > 0 ? '+' : ''}${round(t.changePct, 1)}% · 거래량 ${round(t.volumeRatio, 2)}x</div></div>${committed ? '<p class="note">이 주문은 체결된 것으로 가정되어 선택한 저장소의 행동 버퍼에 반영됐습니다.</p>' : ''}`;
+    $('resultPanel').innerHTML = `<div class="result-card"><div class="score-top"><div class="gauge" style="--score:${r.score}"><b>${r.score}</b></div><div><div class="stage">${stageLabel(r.stage)}</div><div class="summary">${stageSummary(r)}<br>신뢰도 ${r.confidence} · regime ${r.market.regime} · effN ${round(r.baseline.effN, 2)}</div></div></div><ul class="reasons">${reasons}</ul><div class="chips">${chips}</div>${compare}</div><div class="result-card"><div class="stage">입력 주문</div><div class="summary">${t.side === 'buy' ? '매수' : '매도'} · KRW-${t.symbol} · ${krw(t.amount)} · ${t.priceKRW ? krw(t.priceKRW) + ' 기준 · ' : ''}${t.orderType === 'limit' ? '지정가' : '시장가'} · 변동률 ${t.changePct > 0 ? '+' : ''}${round(t.changePct, 1)}% · 거래량 ${round(t.volumeRatio, 2)}x</div></div>${committed ? '<p class="note">이 주문은 체결된 것으로 가정되어 선택한 저장소의 행동 버퍼에 반영됐습니다.</p>' : ''}`;
     $('commitBtn').disabled = false;
   }
 
@@ -309,7 +317,7 @@
     log(`체결 가정 저장: ${lastTrade.side} KRW-${lastTrade.symbol} ${krw(lastTrade.amount)} / resultPct=${lastTrade.resultPct ?? '없음'}`);
   }
   async function warmup(changePct, volumeRatio, label) {
-    const p = PERSONA_PRIORS[personaId] || PERSONA_PRIORS[DEFAULT_PERSONA];
+    const p = engine.state?.persona || PERSONA_PRIORS[personaId] || PERSONA_PRIORS[DEFAULT_PERSONA];
     const coins = p.preferredCoins?.length ? p.preferredCoins : ['KRW-ETH'];
     for (let i = 0; i < 8; i++) {
       const t = { symbol: coin(coins[i % coins.length]), amount: Math.round(p.amount.m), side:'buy', intendedHoldDays:p.holdDays.m, changePct, volumeRatio, resultPct:null };
@@ -323,8 +331,12 @@
     log(`${label} regime 워밍업 8건 저장 완료`);
   }
   async function resetState() {
-    if (useProduction && !confirm('실제 확장 저장소(aiMirror.state.v1)를 초기화합니다. 계속할까요?')) return;
-    engine = new MirrorEngine(null, personaId, now);
+    if (useProduction && !confirm('실제 확장 저장소(mIrror.state.v1)를 초기화합니다. 계속할까요?')) return;
+    if (useProduction && !currentOnboardingResult) {
+      const d = await storageGet([ONBOARDING_RESULT_KEY]);
+      currentOnboardingResult = d[ONBOARDING_RESULT_KEY] || null;
+    }
+    engine = new MirrorEngine(null, personaId, now, useProduction ? { onboardingResult: currentOnboardingResult } : {});
     await storageRemove([stateKey()]);
     await saveState();
     lastTrade = null;
@@ -340,7 +352,11 @@
       return;
     }
     personaId = next in PERSONA_PRIORS ? next : DEFAULT_PERSONA;
-    engine = new MirrorEngine(null, personaId, now);
+    if (useProduction && !currentOnboardingResult) {
+      const d = await storageGet([ONBOARDING_RESULT_KEY]);
+      currentOnboardingResult = d[ONBOARDING_RESULT_KEY] || null;
+    }
+    engine = new MirrorEngine(null, personaId, now, useProduction ? { onboardingResult: currentOnboardingResult } : {});
     await saveState();
     fillScenarios();
     renderStatus();
@@ -386,7 +402,7 @@
     $('personaSelect').addEventListener('change', e => changePersona(e.target.value));
     $('scenarioSelect').addEventListener('change', e => applyScenario(e.target.value));
     $('sideBox').querySelectorAll('button').forEach(b => b.addEventListener('click', () => { setSide(b.dataset.side); markCustom(); }));
-    ['symbolInput','orderTypeInput','amountInput','holdInput','changeInput','volumeInput','resultInput','sellRatioInput'].forEach(id => {
+    ['symbolInput','orderTypeInput','amountInput','priceInput','holdInput','changeInput','volumeInput','resultInput','sellRatioInput'].forEach(id => {
       $(id).addEventListener('input', markCustom);
       $(id).addEventListener('change', markCustom);
     });

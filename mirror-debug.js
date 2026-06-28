@@ -63,7 +63,7 @@
           color:#B7B2A8;white-space:pre-wrap;max-height:160px;overflow:auto;}
         #aimDebugPanel .clk{font-family:'IBM Plex Mono',monospace;color:#6F8FA6;font-size:11px;margin-bottom:8px;}
       </style>
-      <div class="hd"><b>🪞 AI Mirror · 디버그</b><span class="x" id="aimDbgClose">✕</span></div>
+      <div class="hd"><b>🪞 mIrror · 디버그</b><span class="x" id="aimDbgClose">✕</span></div>
       <div class="bd">
         <div class="clk" id="aimDbgClock"></div>
 
@@ -155,14 +155,14 @@
       return Math.max(0.1, 1 + pct / 100);
     }
     function findDemoScenario(keyword) {
-      const scenarios = globalThis.AI_MIRROR_DEMO_SEED_USER_A?.demoTriggerScenarios || [];
+      const scenarios = globalThis.MIRROR_DEMO_SEED_USER_A?.demoTriggerScenarios || [];
       return scenarios.find(s => String(s.scenarioId || '').includes(keyword));
     }
     function lossPctForScenario(scenario) {
       const ctx = scenario?.recentContext || {};
       const lossTradeId = ctx.lastRealizedLossTradeId;
       const lossKRW = Number(ctx.lastLossKRW || 0);
-      const trades = globalThis.AI_MIRROR_DEMO_SEED_USER_A?.historicalTrades || [];
+      const trades = globalThis.MIRROR_DEMO_SEED_USER_A?.historicalTrades || [];
       const lossTrade = trades.find(t => t.tradeId === lossTradeId);
       if (lossTrade && Number(lossTrade.orderAmountKRW)) {
         return Math.round((lossKRW / Number(lossTrade.orderAmountKRW)) * 1000) / 10;

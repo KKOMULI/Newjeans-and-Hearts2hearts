@@ -1,5 +1,5 @@
 /* =========================================================================
- * AI Mirror — Core Engine (buffer edition)
+ * mIrror — Core Engine (buffer edition)
  * -------------------------------------------------------------------------
  * 철학: 예측하지 않는다 · 추천하지 않는다 · 막지 않는다 · 단정하지 않는다.
  *       사용자의 "지금 거래"가 "사용자 자신의 평소 분포"에서 얼마나
@@ -147,7 +147,7 @@ const FALLBACK_PERSONA_PRIORS = {
   recovery_sensitive:    { amount: {m: 520000, mad: 250000}, holdDays: {m:  1.2, mad:  1}, tradeFrequency: 5.5, initialConfidence: 0.45, sampleTrades: [] },
 };
 
-const PERSONA_PRIORS = _buildPersonaPriorsFromSeed(globalThis.AI_MIRROR_PERSONA_SEED_DATASET) || FALLBACK_PERSONA_PRIORS;
+const PERSONA_PRIORS = _buildPersonaPriorsFromSeed(globalThis.MIRROR_PERSONA_SEED_DATASET) || FALLBACK_PERSONA_PRIORS;
 
 /* ----------------------------------------------------------------------- *
  * 유틸: robust statistics
@@ -192,8 +192,9 @@ class MirrorEngine {
    * @param {string} personaId  온보딩 설문으로 정해진 페르소나
    * @param {function} now  () => epoch ms (테스트 주입용)
    */
-  constructor(state, personaId, now = () => Date.now()) {
+  constructor(state, personaId, now = () => Date.now(), options = {}) {
     this.now = now;
+    this.options = options || {};
     if (state && state.personaId && PERSONA_PRIORS[state.personaId]) {
       this.state = state;
       this._normalizeState();
@@ -205,7 +206,10 @@ class MirrorEngine {
   _normalizeState() {
     const resolvedId = this.state.personaId in PERSONA_PRIORS ? this.state.personaId : DEFAULT_PERSONA_ID;
     this.state.personaId = resolvedId;
-    this.state.persona = PERSONA_PRIORS[resolvedId];
+    this.state.persona = this._resolvePersona(resolvedId);
+    if (this.state.persona.userAmountPreference) {
+      this.state.userInitialBaseline = this.state.persona.userAmountPreference;
+    }
     this.state.regimes = this.state.regimes || {};
     this.state.freq = this.state.freq || {
       ewma: this.state.persona.tradeFrequency,
@@ -218,9 +222,51 @@ class MirrorEngine {
     this.state.createdAt = this.state.createdAt || this.now();
   }
 
+  _extractUserAmountPreference(onboardingResult) {
+    const raw = onboardingResult?.initialBaseline || onboardingResult?.userInitialBaseline || this.state?.userInitialBaseline || null;
+    const targets = onboardingResult?.baselineTargets || null;
+    const fromTargets = targets?.amountSource === 'user_onboarding_amount'
+      ? {
+          typicalOrderAmountKRW: targets.averageOrderAmountKRW,
+          amountMadKRW: targets.amountMadKRW,
+          alertAboveKRW: targets.amountAlertAboveKRW,
+          source: targets.amountSource,
+        }
+      : null;
+    const picked = raw || fromTargets;
+    const typical = _seedNumber(picked?.typicalOrderAmountKRW || picked?.orderAmountKRW || picked?.averageOrderAmountKRW, null);
+    if (!Number.isFinite(typical) || typical <= 0) return null;
+    const mad = Math.max(
+      _seedNumber(picked?.amountMadKRW || picked?.orderAmountMadKRW, typical * 0.4),
+      typical * 0.2,
+      10000
+    );
+    return {
+      source: picked?.source || 'user_onboarding_amount',
+      typicalOrderAmountKRW: Math.round(typical),
+      amountMadKRW: Math.round(mad),
+      alertAboveKRW: Math.round(_seedNumber(picked?.alertAboveKRW, typical + mad * 1.5)),
+      labelKo: picked?.labelKo || `약 ${won(typical)}`,
+      noteKo: picked?.noteKo || '사용자가 직접 입력한 편한 1회 주문금액이 synthetic seed 주문금액보다 우선합니다.',
+    };
+  }
+
+  _resolvePersona(personaId) {
+    const resolvedId = personaId in PERSONA_PRIORS ? personaId : DEFAULT_PERSONA_ID;
+    const prior = PERSONA_PRIORS[resolvedId] || PERSONA_PRIORS[DEFAULT_PERSONA_ID];
+    const persona = JSON.parse(JSON.stringify(prior));
+    const pref = this._extractUserAmountPreference(this.options?.onboardingResult);
+    if (pref) {
+      persona.amount = { m: pref.typicalOrderAmountKRW, mad: pref.amountMadKRW };
+      persona.userAmountPreference = pref;
+      persona.initialConfidence = Math.max(_seedNumber(persona.initialConfidence, 0.45), 0.6);
+    }
+    return persona;
+  }
+
   _initState(personaId) {
     const resolvedId = personaId in PERSONA_PRIORS ? personaId : DEFAULT_PERSONA_ID;
-    const persona = PERSONA_PRIORS[resolvedId] || PERSONA_PRIORS[DEFAULT_PERSONA_ID];
+    const persona = this._resolvePersona(resolvedId);
     const state = {
       personaId: resolvedId,
       persona, // prior 보관 (실거래가 적을 때 blend에 사용)
@@ -232,6 +278,7 @@ class MirrorEngine {
       hourHist: new Array(24).fill(0), // 시간대 분포(가벼운 카운터)
       lastResult: null, // { pct, ts } — 최근 1건만 (revenge 탐지용)
       interventionLog: [], // 최근 개입 시점들(피드백 루프 감지용, 짧게)
+      userInitialBaseline: persona.userAmountPreference || null,
       createdAt: this.now(),
     };
     this._applySyntheticSeed(state, persona);
@@ -308,8 +355,12 @@ class MirrorEngine {
     const persona = this.state.persona;
     const reg = this._regime(regimeKey);
 
-    // 버퍼에서 시간가중 적용한 robust 통계
-    const amounts = reg.buffer.map(b => b.amount);
+    // 버퍼에서 시간가중 적용한 robust 통계.
+    // 사용자가 온보딩에서 편한 1회 주문금액을 직접 입력했다면 synthetic seed의
+    // 과거 주문금액 샘플은 amount 기준선 계산에서 제외한다.
+    const hasUserAmountBaseline = Number(this.state.userInitialBaseline?.typicalOrderAmountKRW || 0) > 0;
+    const amountBuffer = hasUserAmountBaseline ? reg.buffer.filter(b => !b.synthetic) : reg.buffer;
+    const amounts = amountBuffer.map(b => b.amount);
     const holds   = reg.buffer.map(b => b.holdDays).filter(v => v != null);
 
     const obsAmtMed = median(amounts);
@@ -318,17 +369,18 @@ class MirrorEngine {
     const obsHoldMad = mad(holds);
 
     const n = reg.effN; // 유효표본
+    const amountN = hasUserAmountBaseline ? Math.min(reg.effN, amountBuffer.length) : reg.effN;
 
     // credibility blending: (k*prior + n*obs) / (k+n)
-    const blend = (priorV, obsV, k) =>
-      obsV == null ? priorV : (k * priorV + n * obsV) / (k + n);
+    const blend = (priorV, obsV, k, nForFeature = n) =>
+      obsV == null ? priorV : (k * priorV + nForFeature * obsV) / (k + nForFeature);
 
     return {
       regimeKey,
       effN: n,
       amount: {
-        med: blend(persona.amount.m,   obsAmtMed,  CONFIG.K_LOCATION),
-        mad: blend(persona.amount.mad, obsAmtMad,  CONFIG.K_SPREAD),
+        med: blend(persona.amount.m,   obsAmtMed,  CONFIG.K_LOCATION, amountN),
+        mad: blend(persona.amount.mad, obsAmtMad,  CONFIG.K_SPREAD, amountN),
       },
       holdDays: {
         med: blend(persona.holdDays.m,   obsHoldMed, CONFIG.K_LOCATION),
@@ -427,7 +479,16 @@ class MirrorEngine {
       });
     }
 
-    // (4) 선호 기준선에서 벗어난 자산 진입
+    // (4) 업비트 딱지/변동성 신호 + 사용자 페르소나의 조합
+    // 업비트 딱지 자체를 투자 추천/비추천으로 해석하지 않고,
+    // "이 사용자의 평소 성향과 이 코인 조건이 얼마나 맞지 않는가"에만 더한다.
+    const assetRiskAdjustment = this._assetRiskAdjustment(trade, market);
+    if (assetRiskAdjustment.points) {
+      raw += assetRiskAdjustment.points;
+      assetRiskAdjustment.reasons.forEach(x => reasons.push(x));
+    }
+
+    // (5) 선호 기준선에서 벗어난 자산 진입
     const preferred = this.state.persona?.preferredCoins || [];
     if (trade.side === 'buy' && preferred.length) {
       const normalizedCoin = `KRW-${String(trade.symbol || '').toUpperCase()}`;
@@ -440,7 +501,7 @@ class MirrorEngine {
       }
     }
 
-    // (5) 직전 손실 직후 재진입 (revenge timing — 단정 아님, 타이밍 사실만)
+    // (6) 직전 손실 직후 재진입 (revenge timing — 단정 아님, 타이밍 사실만)
     const lr = this.state.lastResult;
     if (lr && lr.pct < 0) {
       const hrs = (this.now() - lr.ts) / (60 * 60 * 1000);
@@ -472,12 +533,100 @@ class MirrorEngine {
       stage = 'notice';
     }
 
+    // 유의 종목 딱지가 있거나, 안정형 기준선과 고변동 자산이 강하게 충돌하면
+    // 점수가 애매해도 최소한 근거 확인 화면은 보여준다. 여전히 차단은 하지 않는다.
+    const minStage = assetRiskAdjustment.minStage;
+    if (minStage === 'reflect' && stage !== 'reflect') stage = 'reflect';
+    if (minStage === 'notice' && stage === 'silent') stage = 'notice';
+
     return {
       score, stage, confidence: round2(conf),
       chillFactor: round2(chill),
       market, baseline: base, reasons, biases,
+      assetRisk: trade.assetRisk || null,
+      assetRiskAdjustment,
       observeOnly: stage === 'observe',
     };
+  }
+
+  /* --------------------------------------------------------------------- *
+   * 업비트 딱지/변동성 신호와 페르소나 기준선의 결합
+   * --------------------------------------------------------------------- */
+  _assetRiskAdjustment(trade, market) {
+    const risk = trade.assetRisk;
+    const out = { points: 0, minStage: null, reasons: [] };
+    if (!risk) return out;
+
+    const levelRank = { normal: 0, caution: 1, warning: 2, danger: 3 };
+    const level = risk.combinedLevel || risk.derived?.level || risk.official?.level || 'normal';
+    const rank = levelRank[level] || 0;
+    const officialWarning = !!risk.official?.investmentWarning;
+    const cautionCount = Array.isArray(risk.official?.cautionTypes) ? risk.official.cautionTypes.length : 0;
+    const isBuy = trade.side === 'buy';
+
+    if (officialWarning) {
+      out.points += 28;
+      out.minStage = isBuy ? 'reflect' : 'notice';
+      out.reasons.push({
+        feature: 'assetRisk.officialWarning',
+        text: `${trade.symbol}은(는) 업비트 API에서 유의 종목으로 표시됩니다. 이 정보는 가격 예측이 아니라 업비트의 공식 딱지 상태입니다.`,
+      });
+    } else if (cautionCount > 0) {
+      const labels = risk.official?.cautionLabelsKo?.join(', ') || '주의 경보';
+      out.points += 16;
+      out.minStage = 'notice';
+      out.reasons.push({
+        feature: 'assetRisk.caution',
+        text: `${trade.symbol}에는 업비트 딱지(${labels})가 붙어 있습니다.`,
+      });
+    }
+
+    // 화면에서 읽은 변동률/거래량으로 산출한 자체 등급은 이미 market intensity에도
+    // 일부 반영되므로, 여기서는 페르소나와 충돌할 때만 추가 가중치를 준다.
+    const profile = this.state.persona?.axisProfile || {};
+    const personaId = this.state.personaId || '';
+    const symbol = String(trade.symbol || '').toUpperCase();
+    const isMajor = symbol === 'BTC' || symbol === 'ETH';
+    const isStableLike = personaId === 'stable_accumulator'
+      || profile.preferredAssets === 'BTC/ETH 중심'
+      || profile.marketReaction === '관망형'
+      || profile.holdingPeriod === '장기형';
+    const isVolatilityLike = personaId === 'volatility_responder'
+      || personaId === 'trend_responder'
+      || profile.marketReaction === '추세 추종형'
+      || profile.tradeFrequency === '고빈도';
+
+    if (isBuy && rank >= 2 && isStableLike) {
+      const add = isMajor ? 8 : 18;
+      out.points += add;
+      out.minStage = out.minStage || 'reflect';
+      out.reasons.push({
+        feature: 'assetRisk.personaMismatch',
+        text: `현재 페르소나는 안정/관망 기준선에 가깝기 때문에, ${risk.combinedLabelKo || level} 등급의 ${isMajor ? '대표 자산' : '알트 자산'} 매수는 평소 성향과 더 멀게 봅니다.`,
+      });
+    } else if (isBuy && rank >= 2 && isVolatilityLike) {
+      out.points += officialWarning ? 8 : 4;
+      out.reasons.push({
+        feature: 'assetRisk.personaContext',
+        text: `이 페르소나는 변동성 대응 거래가 일부 기준선에 포함되어 있어, 변동성 자체보다 주문 규모·빈도·직전 손실 여부를 더 크게 봅니다.`,
+      });
+    }
+
+    const lr = this.state.lastResult;
+    if (isBuy && rank >= 2 && lr && lr.pct < 0) {
+      const hrs = (this.now() - lr.ts) / 3.6e6;
+      if (hrs <= 6) {
+        out.points += 12;
+        out.minStage = 'reflect';
+        out.reasons.push({
+          feature: 'assetRisk.lossContext',
+          text: `직전 손실 이후 고변동/업비트 딱지 자산에 다시 진입하는 조건이라 복구 매매 가능성을 더 주의해서 봅니다.`,
+        });
+      }
+    }
+
+    out.points = clamp(Math.round(out.points), 0, 45);
+    return out;
   }
 
   /* --------------------------------------------------------------------- *
@@ -506,6 +655,14 @@ class MirrorEngine {
     if (this.state.freq.ewma > 0 && trade._recentBurst && trade._recentBurst > this.state.freq.ewma * 1.8) {
       out.push({ name: '과신(Overconfidence) 가능성',
         evidence: `최근 거래 빈도가 평소(주 ${this.state.freq.ewma.toFixed(1)}회)보다 뚜렷이 높습니다.` });
+    }
+    const risk = trade.assetRisk;
+    if (risk && trade.side === 'buy') {
+      const cautionCount = Array.isArray(risk.official?.cautionTypes) ? risk.official.cautionTypes.length : 0;
+      if (risk.official?.investmentWarning || cautionCount > 0) {
+        out.push({ name: '업비트 딱지 자산 진입 신호',
+          evidence: `${trade.symbol}에 업비트 딱지가 있어, 행동 편향과 별개로 근거 확인이 필요합니다.` });
+      }
     }
     return out;
   }

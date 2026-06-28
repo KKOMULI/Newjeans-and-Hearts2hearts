@@ -1,10 +1,10 @@
-/* Auto-generated from uploaded AI Mirror JSON seed files. */
+/* Auto-generated from uploaded mIrror JSON seed files. */
 (function(){
-  globalThis.AI_MIRROR_ONBOARDING_SCORING = {
-  "schemaVersion": "0.1",
-  "project": "AI Mirror - Onboarding Question Scoring",
+  globalThis.MIRROR_ONBOARDING_SCORING = {
+  "schemaVersion": "0.2",
+  "project": "mIrror - Onboarding Question Scoring",
   "createdAt": "2026-06-28T15:30:00+09:00",
-  "purpose": "온보딩 답변을 초기 행동 기준선, 대표 페르소나, 숨은 편향 민감도 점수로 변환하기 위한 MVP 점수표",
+  "purpose": "온보딩 답변을 초기 행동 기준선, 대표 페르소나, 숨은 편향 민감도 점수로 변환하기 위한 MVP 점수표. v0.2부터 팝업의 편한 1회 주문금액 질문을 초기 주문금액 기준선으로 함께 저장한다.",
   "principle": "온보딩 결과는 확정 성격이 아니라 실제 거래 데이터가 쌓이기 전까지 사용하는 낮은 신뢰도의 초기 행동 가설이다.",
   "axes": {
     "orderSize": [
@@ -158,7 +158,8 @@
       "preferredAssets": 0.16,
       "marketReaction": 0.18,
       "pnlReaction": 0.18
-    }
+    },
+    "amountBaseline": "팝업의 편한 1회 주문금액 질문은 성향 라벨이 아니라 초기 주문 금액 중앙값으로 직접 반영한다. 실제 거래 데이터가 쌓이면 이 값도 rolling buffer와 blend된다."
   },
   "questions": [
     {
@@ -942,12 +943,18 @@
       "lossAversion": 0
     },
     "onboardingConfidence": 0,
-    "resultMessageKo": "현재 응답 기준으로는 ...에 가장 가깝습니다. 실제 거래 데이터가 쌓이면 이 프로필은 자동으로 조정됩니다."
+    "resultMessageKo": "현재 응답 기준으로는 ...에 가장 가깝습니다. 실제 거래 데이터가 쌓이면 이 프로필은 자동으로 조정됩니다.",
+    "baselineOverrides": {
+      "orderAmountKRW": 0,
+      "orderAmountMadKRW": 0,
+      "orderAmountBandLabelKo": "초기 주문금액 구간",
+      "source": "onboarding_amount_question"
+    }
   }
 };
-  globalThis.AI_MIRROR_PERSONA_SEED_DATASET = {
+  globalThis.MIRROR_PERSONA_SEED_DATASET = {
   "schemaVersion": "0.2",
-  "project": "AI Mirror - Persona Seed Dataset",
+  "project": "mIrror - Persona Seed Dataset",
   "createdAt": "2026-06-28T13:58:00+09:00",
   "purpose": "신규 유저 온보딩에서 선택된 초기 투자 성향 가설을 시스템 기준선으로 적용하기 위한 합성 샘플 거래 데이터",
   "warning": "이 데이터는 실제 사용자 과거 거래가 아니라 cold start 완화를 위한 synthetic seed다. 실제 거래 데이터와의 반영 비율 조정은 전체 시스템의 반감기 정책에서 별도 처리한다.",
@@ -2833,9 +2840,9 @@
     "demoCurrentOrders": "used to test none, notice, explain_reflect, reflect_delay interventions"
   }
 };
-  globalThis.AI_MIRROR_DEMO_SEED_USER_A = {
+  globalThis.MIRROR_DEMO_SEED_USER_A = {
   "schemaVersion": "0.1",
-  "project": "AI Mirror - Upbit Extension Prototype",
+  "project": "mIrror - Upbit Extension Prototype",
   "principle": "This system does not predict markets or recommend trades. It compares the current order with the user's historical behavior pattern.",
   "user": {
     "userId": "user_a",

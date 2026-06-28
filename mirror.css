@@ -1,5 +1,5 @@
-/* AI Mirror — injected card styles. 주문 버튼을 가리지 않도록 우하단 고정. */
-#aiMirrorRoot{
+/* mIrror — injected card styles. 주문 버튼을 가리지 않도록 우하단 고정. */
+#mirrorRoot{
   position:fixed; right:20px; bottom:20px; z-index:2147483000;
   width:340px; max-width:calc(100vw - 40px);
   font-family:-apple-system,'Inter',Helvetica,Arial,sans-serif;
@@ -42,4 +42,259 @@
   background:#1C1F26; border:1px solid #2F333C; color:#E9E5DD; border-radius:4px;
   padding:12px 14px; font-family:-apple-system,sans-serif; font-size:12.5px; line-height:1.5;
   box-shadow:0 8px 30px rgba(0,0,0,.4);
+}
+
+/* Upbit header demo order controls. These are feature-demo buttons only. */
+.aim-demo-slot{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+}
+.aim-demo-order-controls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Arial,sans-serif;
+}
+.aim-demo-buy{
+  min-width:64px;
+  height:34px;
+  padding:0 13px;
+  border:0;
+  border-radius:4px;
+  background:#1261C4;
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  line-height:34px;
+  cursor:pointer;
+  box-shadow:0 3px 10px rgba(0,0,0,.18);
+}
+.aim-demo-buy.warn{
+  min-width:96px;
+  background:#D74B4B;
+}
+.aim-demo-buy:hover{filter:brightness(1.06);}
+.aim-demo-buy:active{transform:translateY(1px);}
+.aim-demo-modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:2147483001;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(0,0,0,.56);
+  backdrop-filter:blur(2px);
+}
+.aim-demo-modal{
+  width:480px;
+  max-width:calc(100vw - 40px);
+  max-height:calc(100vh - 48px);
+  overflow:auto;
+  background:linear-gradient(180deg,#1B1A17,#151513);
+  border:1px solid #6E5331;
+  border-radius:8px;
+  color:#E9E5DD;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  padding:20px;
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Arial,sans-serif;
+  animation:aimFade .2s ease;
+}
+.aim-demo-modal-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:14px;
+}
+.aim-demo-modal h2{
+  margin:0;
+  font-size:20px;
+  line-height:1.3;
+  letter-spacing:-.02em;
+}
+.aim-demo-modal h3{
+  margin:0 0 8px;
+  font-size:13px;
+  color:#E9E5DD;
+}
+.aim-demo-x{
+  width:32px;
+  height:32px;
+  border:1px solid #2F333C;
+  background:#202228;
+  color:#B7B2A8;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:22px;
+  line-height:28px;
+}
+.aim-demo-summary{
+  display:grid;
+  gap:8px;
+  padding:12px;
+  border:1px solid #2F333C;
+  background:#202228;
+  border-radius:6px;
+  margin-bottom:14px;
+}
+.aim-demo-summary div{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:12.5px;
+}
+.aim-demo-summary span{color:#9A958C;}
+.aim-demo-summary b{color:#E9E5DD; text-align:right; font-weight:700;}
+.aim-demo-section{
+  margin-top:14px;
+}
+.aim-demo-evidence{
+  margin-bottom:0;
+}
+.aim-demo-check{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  padding:10px;
+  border:1px solid #2F333C;
+  background:#1D2027;
+  border-radius:4px;
+  color:#D9D4CB;
+  font-size:12.5px;
+  line-height:1.5;
+}
+.aim-demo-check input{margin-top:2px;}
+.aim-demo-actions{
+  display:grid;
+  grid-template-columns:1fr 1.4fr;
+  gap:8px;
+  margin-top:14px;
+}
+.aim-demo-title{
+  font-size:15px;
+  font-weight:700;
+  color:#E9E5DD;
+  margin-bottom:8px;
+}
+.aim-demo-card b{color:#E9E5DD;}
+
+/* Price/amount controls for the feature-demo buy buttons. */
+.aim-demo-order-controls{
+  flex-wrap:wrap;
+  max-width:min(620px, calc(100vw - 32px));
+}
+.aim-demo-field{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  height:34px;
+  padding:0 8px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:4px;
+  background:#151a22;
+  color:#B7B2A8;
+  font-size:11px;
+  font-weight:600;
+}
+.aim-demo-field input{
+  width:88px;
+  height:24px;
+  padding:0 4px;
+  border:0;
+  outline:0;
+  background:#0f1319;
+  color:#E9E5DD;
+  border-radius:3px;
+  font-size:12px;
+  font-family:'IBM Plex Mono',Menlo,Consolas,monospace;
+  text-align:right;
+}
+#mirrorInlineRoot{
+  width:100%;
+  box-sizing:border-box;
+  margin-top:10px;
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',Arial,sans-serif;
+  z-index:2147482999;
+}
+.aim-inline-banner{
+  border:1px solid #2F333C;
+  border-radius:6px;
+  background:#171b22;
+  color:#E9E5DD;
+  padding:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+}
+.aim-inline-banner.info{border-color:#3E5668;}
+.aim-inline-banner.warn{border-color:#8A6A2E;background:#1D1A13;}
+.aim-inline-banner.danger{border-color:#8A3A35;background:#221615;}
+.aim-inline-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+.aim-inline-head strong{font-size:13px;color:#E9E5DD;}
+.aim-inline-head span{font-size:11px;color:#CC8A45;font-weight:700;}
+.aim-inline-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:12px;
+  line-height:1.5;
+  padding:3px 0;
+}
+.aim-inline-row span{color:#9A958C;white-space:nowrap;}
+.aim-inline-row b{color:#E9E5DD;text-align:right;}
+.aim-inline-reasons{
+  list-style:none;
+  margin:8px 0 0;
+  padding:0;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+.aim-inline-reasons li{
+  position:relative;
+  padding:7px 0 0 12px;
+  color:#D9D4CB;
+  font-size:12px;
+  line-height:1.45;
+}
+.aim-inline-reasons li:before{
+  content:'·';
+  position:absolute;
+  left:0;
+  color:#6F8FA6;
+}
+.aim-inline-foot{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
+}
+.aim-inline-mode{
+  color:#9A958C;
+  font-size:11px;
+}
+.aim-inline-action{
+  border:1px solid #6F8FA6;
+  background:#202830;
+  color:#E9E5DD;
+  border-radius:4px;
+  padding:7px 10px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.aim-inline-saved{
+  margin-top:8px;
+  padding:8px 9px;
+  border:1px solid rgba(124,154,110,.42);
+  border-radius:4px;
+  background:rgba(124,154,110,.12);
+  color:#CDE1C4;
+  font-size:12px;
+  line-height:1.45;
 }
