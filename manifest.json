@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "mIrror",
   "version": "0.1.9",
-  "description": "당신의 거래가 평소의 당신과 얼마나 다른지만 보여주는 거울. v0.1.7 UI를 유지하며 매수(경고) 클릭 결과 배너를 고정합니다.",
+  "description": "당신의 거래가 평소의 당신과 얼마나 다른지 보여주는 객관적인 거울.",
   "permissions": [
     "storage"
   ],
