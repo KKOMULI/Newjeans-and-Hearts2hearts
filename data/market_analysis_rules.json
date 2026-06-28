@@ -1,0 +1,314 @@
+{
+    "schemaVersion":  "0.1",
+    "project":  "AI Mirror - Market Analysis Rules",
+    "createdAt":  "2026-06-28T15:45:00+09:00",
+    "purpose":  "현재 시장이 사용자의 의사결정을 흔들기 쉬운 환경인지 계산하기 위한 MVP 시장 분석 규칙",
+    "principle":  "시장 분석은 매수/매도 추천이나 가격 예측이 아니라 행동 개입 필요성을 판단하기 위한 배경 신호다.",
+    "inputSources":  {
+                         "live":  {
+                                      "source":  "exchange_public_market_data",
+                                      "requiredData":  [
+                                                           "ticker",
+                                                           "minuteCandles",
+                                                           "volume"
+                                                       ],
+                                      "note":  "실서비스에서는 업비트 공개 시세/캔들 데이터를 사용한다. 주문 권한이나 투자 추천 데이터는 필요하지 않다."
+                                  },
+                         "demo":  {
+                                      "source":  "synthetic_market_snapshots",
+                                      "requiredData":  [
+                                                           "market",
+                                                           "candles",
+                                                           "referenceVolume"
+                                                       ],
+                                      "note":  "해커톤 데모에서는 아래 demoMarketScenarios를 fallback 데이터로 사용할 수 있다."
+                                  }
+                     },
+    "windows":  {
+                    "primaryWindowMinutes":  30,
+                    "shortWindowMinutes":  15,
+                    "referenceWindowCount":  20,
+                    "rationale":  "주문 직전 행동 개입에는 15~30분 단기 변화가 가장 잘 보이고, 거래량 비교는 직전 20개 기준 구간 평균을 사용한다."
+                },
+    "featureDefinitions":  {
+                               "shortTermChangeRatePct":  {
+                                                              "formula":  "(lastClose - firstOpen) / firstOpen * 100",
+                                                              "meaning":  "분석 시간창 안에서 가격이 어느 방향으로 얼마나 움직였는지"
+                                                          },
+                               "volatilityPct":  {
+                                                     "formula":  "(highestHigh - lowestLow) / firstOpen * 100",
+                                                     "meaning":  "시간창 안에서 고가와 저가의 차이가 얼마나 큰지"
+                                                 },
+                               "volumeChangeRatePct":  {
+                                                           "formula":  "(currentWindowVolume - averageReferenceVolume) / averageReferenceVolume * 100",
+                                                           "meaning":  "최근 거래량이 기준 구간 평균 대비 얼마나 늘었는지"
+                                                       },
+                               "closePositionPct":  {
+                                                        "formula":  "(lastClose - lowestLow) / (highestHigh - lowestLow) * 100",
+                                                        "meaning":  "종가가 시간창 내 고점/저점 사이 어디에 위치하는지. 100에 가까우면 고점 부근, 0에 가까우면 저점 부근이다."
+                                                    }
+                           },
+    "thresholds":  {
+                       "sharpRisePct":  5,
+                       "sharpDropPct":  -5,
+                       "moderateRisePct":  2.5,
+                       "moderateDropPct":  -2.5,
+                       "highVolatilityPct":  5,
+                       "extremeVolatilityPct":  8,
+                       "volumeSpikePct":  150,
+                       "extremeVolumeSpikePct":  300,
+                       "highClosePositionPct":  75,
+                       "lowClosePositionPct":  25
+                   },
+    "marketStateRules":  [
+                             {
+                                 "state":  "sharp_rise",
+                                 "condition":  "shortTermChangeRatePct \u003e= 5.0",
+                                 "descriptionKo":  "단기 급등"
+                             },
+                             {
+                                 "state":  "sharp_drop",
+                                 "condition":  "shortTermChangeRatePct \u003c= -5.0",
+                                 "descriptionKo":  "단기 급락"
+                             },
+                             {
+                                 "state":  "moderate_rise",
+                                 "condition":  "2.5 \u003c= shortTermChangeRatePct \u003c 5.0",
+                                 "descriptionKo":  "완만한 상승"
+                             },
+                             {
+                                 "state":  "moderate_drop",
+                                 "condition":  "-5.0 \u003c shortTermChangeRatePct \u003c= -2.5",
+                                 "descriptionKo":  "완만한 하락"
+                             },
+                             {
+                                 "state":  "high_volatility",
+                                 "condition":  "volatilityPct \u003e= 5.0",
+                                 "descriptionKo":  "높은 변동성"
+                             },
+                             {
+                                 "state":  "volume_spike",
+                                 "condition":  "volumeChangeRatePct \u003e= 150.0",
+                                 "descriptionKo":  "거래량 급증"
+                             },
+                             {
+                                 "state":  "normal",
+                                 "condition":  "none of the above primary stress conditions",
+                                 "descriptionKo":  "일반 구간"
+                             }
+                         ],
+    "scoring":  {
+                    "scoreName":  "marketStressScore",
+                    "scoreRange":  "0~100",
+                    "interpretation":  "점수가 높을수록 시장이 사용자의 판단을 흔들기 쉬운 환경일 가능성이 높다. 투자 위험도나 매수/매도 신호가 아니다.",
+                    "components":  {
+                                       "changeStress":  {
+                                                            "maxPoints":  35,
+                                                            "formula":  "min(abs(shortTermChangeRatePct) / 8.0 * 35, 35)"
+                                                        },
+                                       "volatilityStress":  {
+                                                                "maxPoints":  25,
+                                                                "formula":  "min(volatilityPct / 8.0 * 25, 25)"
+                                                            },
+                                       "volumeStress":  {
+                                                            "maxPoints":  20,
+                                                            "formula":  "min(max(volumeChangeRatePct, 0) / 300.0 * 20, 20)"
+                                                        },
+                                       "closePositionStress":  {
+                                                                   "maxPoints":  10,
+                                                                   "formula":  "if closePositionPct \u003e= 80 or closePositionPct \u003c= 20 then 10 else if closePositionPct \u003e= 70 or closePositionPct \u003c= 30 then 5 else 0"
+                                                               },
+                                       "regimeBonus":  {
+                                                           "maxPoints":  10,
+                                                           "formula":  "10 if sharp_rise or sharp_drop, 5 if high_volatility and volume_spike, else 0"
+                                                       }
+                                   },
+                    "finalFormula":  "min(changeStress + volatilityStress + volumeStress + closePositionStress + regimeBonus, 100)",
+                    "levels":  [
+                                   {
+                                       "level":  "calm",
+                                       "range":  "0~29",
+                                       "descriptionKo":  "평소와 비슷한 시장 환경"
+                                   },
+                                   {
+                                       "level":  "active",
+                                       "range":  "30~54",
+                                       "descriptionKo":  "주의 깊게 볼 만한 시장 환경"
+                                   },
+                                   {
+                                       "level":  "heated",
+                                       "range":  "55~74",
+                                       "descriptionKo":  "의사결정이 흔들리기 쉬운 시장 환경"
+                                   },
+                                   {
+                                       "level":  "extreme",
+                                       "range":  "75~100",
+                                       "descriptionKo":  "짧은 개입이 필요한 고자극 시장 환경"
+                                   }
+                               ]
+                },
+    "outputContract":  {
+                           "market":  "KRW-BTC",
+                           "timestamp":  "ISO-8601 KST timestamp",
+                           "windowMinutes":  30,
+                           "features":  {
+                                            "shortTermChangeRatePct":  0,
+                                            "volatilityPct":  0,
+                                            "volumeChangeRatePct":  0,
+                                            "closePositionPct":  0
+                                        },
+                           "states":  [
+                                          "normal",
+                                          "moderate_rise",
+                                          "moderate_drop",
+                                          "sharp_rise",
+                                          "sharp_drop",
+                                          "high_volatility",
+                                          "volume_spike"
+                                      ],
+                           "primaryState":  "normal",
+                           "marketStressScore":  0,
+                           "stressLevel":  "calm | active | heated | extreme",
+                           "evidence":  [
+                                            "객관적 근거 문장 1",
+                                            "객관적 근거 문장 2"
+                                        ],
+                           "biasLinks":  {
+                                             "fomo":  "sharp_rise + volume_spike + buy order에서 보조 신호로 사용",
+                                             "panicSelling":  "sharp_drop + high_volatility + large sell order에서 보조 신호로 사용",
+                                             "recoveryTrading":  "recent loss + sharp_rise + re-entry order에서 보조 신호로 사용"
+                                         }
+                       },
+    "demoMarketScenarios":  [
+                                {
+                                    "scenarioId":  "MKT_NORMAL_BTC",
+                                    "titleKo":  "평온한 BTC 구간",
+                                    "market":  "KRW-BTC",
+                                    "timestamp":  "2026-06-28T09:30:00+09:00",
+                                    "features":  {
+                                                     "shortTermChangeRatePct":  0.6,
+                                                     "volatilityPct":  1.4,
+                                                     "volumeChangeRatePct":  12,
+                                                     "closePositionPct":  58
+                                                 },
+                                    "expected":  {
+                                                     "primaryState":  "normal",
+                                                     "states":  [
+                                                                    "normal"
+                                                                ],
+                                                     "marketStressScore":  13,
+                                                     "stressLevel":  "calm"
+                                                 },
+                                    "evidence":  [
+                                                     "최근 30분 가격 변화가 1% 미만입니다.",
+                                                     "거래량 변화가 기준 구간 대비 크지 않습니다."
+                                                 ]
+                                },
+                                {
+                                    "scenarioId":  "MKT_SHARP_RISE_SOL",
+                                    "titleKo":  "SOL 급등 및 거래량 급증",
+                                    "market":  "KRW-SOL",
+                                    "timestamp":  "2026-06-28T14:20:00+09:00",
+                                    "features":  {
+                                                     "shortTermChangeRatePct":  8.2,
+                                                     "volatilityPct":  6.1,
+                                                     "volumeChangeRatePct":  240,
+                                                     "closePositionPct":  88
+                                                 },
+                                    "expected":  {
+                                                     "primaryState":  "sharp_rise",
+                                                     "states":  [
+                                                                    "sharp_rise",
+                                                                    "high_volatility",
+                                                                    "volume_spike"
+                                                                ],
+                                                     "marketStressScore":  84,
+                                                     "stressLevel":  "extreme"
+                                                 },
+                                    "evidence":  [
+                                                     "최근 30분 가격이 8.2% 상승했습니다.",
+                                                     "거래량이 기준 구간 평균보다 240% 높습니다.",
+                                                     "종가가 구간 고점 부근에 있습니다."
+                                                 ]
+                                },
+                                {
+                                    "scenarioId":  "MKT_SHARP_DROP_ETH",
+                                    "titleKo":  "ETH 급락 및 고변동성",
+                                    "market":  "KRW-ETH",
+                                    "timestamp":  "2026-06-28T10:18:00+09:00",
+                                    "features":  {
+                                                     "shortTermChangeRatePct":  -7.8,
+                                                     "volatilityPct":  7,
+                                                     "volumeChangeRatePct":  220,
+                                                     "closePositionPct":  12
+                                                 },
+                                    "expected":  {
+                                                     "primaryState":  "sharp_drop",
+                                                     "states":  [
+                                                                    "sharp_drop",
+                                                                    "high_volatility",
+                                                                    "volume_spike"
+                                                                ],
+                                                     "marketStressScore":  86,
+                                                     "stressLevel":  "extreme"
+                                                 },
+                                    "evidence":  [
+                                                     "최근 30분 가격이 7.8% 하락했습니다.",
+                                                     "변동폭이 7.0%로 높습니다.",
+                                                     "종가가 구간 저점 부근에 있습니다."
+                                                 ]
+                                },
+                                {
+                                    "scenarioId":  "MKT_HIGH_VOLATILITY_XRP",
+                                    "titleKo":  "XRP 고변동성 혼조 구간",
+                                    "market":  "KRW-XRP",
+                                    "timestamp":  "2026-06-28T11:43:00+09:00",
+                                    "features":  {
+                                                     "shortTermChangeRatePct":  1.1,
+                                                     "volatilityPct":  8.6,
+                                                     "volumeChangeRatePct":  180,
+                                                     "closePositionPct":  49
+                                                 },
+                                    "expected":  {
+                                                     "primaryState":  "high_volatility",
+                                                     "states":  [
+                                                                    "high_volatility",
+                                                                    "volume_spike"
+                                                                ],
+                                                     "marketStressScore":  48,
+                                                     "stressLevel":  "active"
+                                                 },
+                                    "evidence":  [
+                                                     "방향성은 크지 않지만 변동폭이 8.6%입니다.",
+                                                     "거래량이 기준 구간 평균보다 180% 높습니다."
+                                                 ]
+                                },
+                                {
+                                    "scenarioId":  "MKT_COUNTERTREND_ADA",
+                                    "titleKo":  "ADA 급락 후 저점 부근 반등 후보",
+                                    "market":  "KRW-ADA",
+                                    "timestamp":  "2026-06-28T13:05:00+09:00",
+                                    "features":  {
+                                                     "shortTermChangeRatePct":  -4.1,
+                                                     "volatilityPct":  5.4,
+                                                     "volumeChangeRatePct":  165,
+                                                     "closePositionPct":  22
+                                                 },
+                                    "expected":  {
+                                                     "primaryState":  "moderate_drop",
+                                                     "states":  [
+                                                                    "moderate_drop",
+                                                                    "high_volatility",
+                                                                    "volume_spike"
+                                                                ],
+                                                     "marketStressScore":  59,
+                                                     "stressLevel":  "heated"
+                                                 },
+                                    "evidence":  [
+                                                     "최근 30분 가격이 4.1% 하락했습니다.",
+                                                     "변동성과 거래량이 모두 평소보다 높습니다.",
+                                                     "종가가 구간 저점에 가까워 역추세 진입 유혹이 커질 수 있습니다."
+                                                 ]
+                                }
+                            ]
+}
