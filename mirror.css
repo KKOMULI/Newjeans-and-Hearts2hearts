@@ -1,0 +1,45 @@
+/* AI Mirror — injected card styles. 주문 버튼을 가리지 않도록 우하단 고정. */
+#aiMirrorRoot{
+  position:fixed; right:20px; bottom:20px; z-index:2147483000;
+  width:340px; max-width:calc(100vw - 40px);
+  font-family:-apple-system,'Inter',Helvetica,Arial,sans-serif;
+}
+.aim-card{
+  background:linear-gradient(180deg,#1B1A17,#161513);
+  border:1px solid #6E5331; border-radius:4px; padding:18px 18px 14px;
+  box-shadow:0 10px 40px rgba(0,0,0,.45); color:#E9E5DD;
+  animation:aimFade .28s ease;
+}
+@keyframes aimFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.aim-stage{font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#CC8A45; margin-bottom:10px;}
+.aim-row{display:flex; align-items:center; gap:14px; margin-bottom:12px;}
+.aim-gauge-wrap{position:relative; width:60px; height:60px; flex:none;}
+.aim-gauge{width:100%; height:100%; transform:rotate(-90deg);}
+.aim-score{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',Menlo,monospace; font-size:16px; color:#E9E5DD;}
+.aim-desc{font-size:12.5px; line-height:1.55; color:#B7B2A8;}
+.aim-ev{list-style:none; margin:0 0 12px; padding:0;}
+.aim-ev li{font-size:12.5px; line-height:1.5; color:#E9E5DD; padding:6px 0;
+  border-bottom:1px solid #2F333C; padding-left:12px; position:relative;}
+.aim-ev li:last-child{border:none;}
+.aim-ev li:before{content:'·'; position:absolute; left:0; color:#6F8FA6;}
+.aim-chips{margin-bottom:12px;}
+.aim-chip{display:inline-block; font-size:11.5px; border:1px solid #2F333C; color:#E9E5DD;
+  padding:4px 9px; border-radius:20px; margin:0 5px 5px 0;}
+.aim-ro{display:flex; flex-direction:column; gap:6px; margin-bottom:12px;}
+.aim-ro button{text-align:left; background:#252934; border:1px solid #2F333C; color:#E9E5DD;
+  font-size:12.5px; padding:9px 11px; border-radius:2px; cursor:pointer;}
+.aim-ro button.sel{border-color:#6F8FA6; background:#202830;}
+.aim-cd{font-family:'IBM Plex Mono',monospace; font-size:30px; color:#CC8A45; text-align:center; margin:6px 0;}
+.aim-btn{width:100%; border:none; border-radius:2px; padding:10px 0; cursor:pointer;
+  font-size:13.5px; font-weight:600;}
+.aim-btn.primary{background:#E9E5DD; color:#14161B;}
+.aim-btn.primary:disabled{opacity:.35; cursor:not-allowed;}
+.aim-btn.ghost{background:transparent; border:1px solid #2F333C; color:#B7B2A8; font-weight:500;}
+.aim-note{font-size:11px; color:#9A958C; line-height:1.5; margin-top:9px;}
+.aim-toast{
+  position:fixed; right:20px; bottom:20px; z-index:2147483000; max-width:320px;
+  background:#1C1F26; border:1px solid #2F333C; color:#E9E5DD; border-radius:4px;
+  padding:12px 14px; font-family:-apple-system,sans-serif; font-size:12.5px; line-height:1.5;
+  box-shadow:0 8px 30px rgba(0,0,0,.4);
+}

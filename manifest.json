@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "AI Mirror",
+  "version": "0.1.1",
+  "description": "당신의 거래가 평소의 당신과 얼마나 다른지만 보여주는 거울. 추천하지 않고, 막지 않습니다.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://upbit.com/*",
+    "https://*.upbit.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://upbit.com/*",
+        "https://*.upbit.com/*"
+      ],
+      "js": [
+        "ai-mirror-data.js",
+        "mirror-core.js",
+        "upbit-adapter.js",
+        "content.js",
+        "mirror-debug.js"
+      ],
+      "css": [
+        "mirror.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "AI Mirror 설정",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "data/*.json"
+      ],
+      "matches": [
+        "https://upbit.com/*",
+        "https://*.upbit.com/*"
+      ]
+    }
+  ]
+}

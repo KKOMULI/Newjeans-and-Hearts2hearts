@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Mirror · 디버깅용 모의 매매창</title>
+  <link rel="stylesheet" href="debug-trade.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>AI Mirror · 디버깅용 모의 매매창</h1>
+      <p>실제 거래 없이 모의 주문을 MirrorEngine에 넣어 개입 단계와 commit 흐름을 확인합니다.</p>
+    </div>
+    <div class="top-meta">
+      <span id="modeLabel">디버그 저장소</span>
+      <span id="clockLabel">가상시계</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card market">
+      <div class="card-head">
+        <h2>가상 시장</h2>
+        <span>주문 API 미사용</span>
+      </div>
+      <div class="ticker">
+        <div>
+          <strong id="marketSymbol">KRW-ETH</strong>
+          <p id="marketPrice">₩0</p>
+        </div>
+        <b id="marketChange" class="flat">0.0%</b>
+      </div>
+      <div class="metrics">
+        <div><small>Regime</small><b id="marketRegime">calm</b></div>
+        <div><small>거래량</small><b id="marketVolume">1.0x</b></div>
+        <div><small>강도</small><b id="marketIntensity">0/100</b></div>
+      </div>
+      <svg id="chart" viewBox="0 0 540 260" preserveAspectRatio="none"></svg>
+      <div class="book">
+        <div><h3>매도 호가</h3><div id="asks"></div></div>
+        <div><h3>매수 호가</h3><div id="bids"></div></div>
+      </div>
+      <p class="note">이 창은 실제 거래소 DOM/주문 버튼을 건드리지 않습니다. 로컬 seed 데이터와 직접 입력값으로 분석 엔진만 호출합니다.</p>
+    </section>
+
+    <section class="card form">
+      <div class="card-head">
+        <h2>모의 주문</h2>
+        <span>seed 프리셋 + 직접 입력</span>
+      </div>
+
+      <label class="check"><input type="checkbox" id="useProductionState"><span><b>실제 확장 저장소에 반영</b><em>기본 OFF. OFF면 aiMirror.debugTrade.*만 사용합니다.</em></span></label>
+
+      <div class="two">
+        <label>페르소나<select id="personaSelect"></select></label>
+        <label>프리셋<select id="scenarioSelect"></select></label>
+      </div>
+
+      <div class="side" id="sideBox">
+        <button data-side="buy" class="on buy">매수</button>
+        <button data-side="sell" class="sell">매도</button>
+      </div>
+
+      <div class="two">
+        <label>종목<select id="symbolInput"><option>BTC</option><option selected>ETH</option><option>SOL</option><option>XRP</option><option>ADA</option><option>NEAR</option><option>AVAX</option><option>DOGE</option><option>XYZ</option></select></label>
+        <label>주문 타입<select id="orderTypeInput"><option value="market">시장가</option><option value="limit">지정가</option></select></label>
+      </div>
+      <div class="two">
+        <label>주문 금액(KRW)<input id="amountInput" type="number" value="460000" step="10000"></label>
+        <label>보유 의도(일)<input id="holdInput" type="number" value="7" step="0.5"></label>
+      </div>
+      <div class="two">
+        <label>24h 변동률(%)<input id="changeInput" type="number" value="0.5" step="0.1"></label>
+        <label>거래량 비율(x)<input id="volumeInput" type="number" value="1.08" step="0.1"></label>
+      </div>
+      <div class="two">
+        <label>저장 시 손익률(%)<input id="resultInput" type="number" step="0.1" placeholder="예: -4.2"></label>
+        <label>보유분 매도 비율<input id="sellRatioInput" type="number" step="0.01" placeholder="예: 0.82"></label>
+      </div>
+
+      <div class="loss-box">
+        <p>Revenge Trading 테스트용 직전 손실 주입</p>
+        <div class="two">
+          <label>직전 손실률(%)<input id="lossPctInput" type="number" value="-6.2" step="0.1"></label>
+          <label>몇 분 전<input id="lossMinutesInput" type="number" value="19" step="1"></label>
+        </div>
+        <button id="seedLossBtn" class="ghost">직전 손실 주입</button>
+      </div>
+
+      <div class="actions">
+        <button id="evaluateBtn" class="primary">거울 검토 실행</button>
+        <button id="commitBtn" class="accent" disabled>체결 가정 후 저장</button>
+      </div>
+      <div class="tools">
+        <button id="warmCalmBtn">평온×8</button><button id="warmSurgeBtn">급등×8</button><button id="warmCrashBtn">급락×8</button>
+        <button id="advanceDayBtn">+1일</button><button id="advance180Btn">+180일</button><button id="resetBtn">상태 초기화</button>
+      </div>
+    </section>
+
+    <section class="card result">
+      <div class="card-head">
+        <h2>거울 결과</h2>
+        <span>추천/예측 없음</span>
+      </div>
+      <div id="resultPanel" class="empty">모의 주문을 입력하고 “거울 검토 실행”을 누르세요.</div>
+      <div class="actions small-actions">
+        <button id="inspectBtn" class="ghost">엔진 상태 보기</button>
+        <button id="clearLogBtn" class="ghost">로그 지우기</button>
+      </div>
+      <pre id="log">준비됨.</pre>
+    </section>
+  </main>
+
+  <script src="ai-mirror-data.js"></script>
+  <script src="mirror-core.js"></script>
+  <script src="debug-trade.js"></script>
+</body>
+</html>
