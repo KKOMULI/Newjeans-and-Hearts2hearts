@@ -110,38 +110,38 @@
                                                                         }
                                                     },
                               "trend_responder":  {
-                                                         "nameKo":  "추세 반응형",
-                                                         "axisProfile":  {
-                                                                             "orderSize":  "medium_size",
-                                                                             "tradeFrequency":  "regular",
-                                                                             "holdingPeriod":  "short_term",
-                                                                             "preferredAssets":  "alt_diversified",
-                                                                             "marketReaction":  "trend_following",
-                                                                             "pnlReaction":  "reenter_after_loss"
-                                                                         }
-                                                     },
-                              "volatility_responder":  {
-                                                      "nameKo":  "변동성 대응형",
+                                                      "nameKo":  "추세 반응형",
                                                       "axisProfile":  {
                                                                           "orderSize":  "medium_size",
-                                                                          "tradeFrequency":  "high_frequency",
+                                                                          "tradeFrequency":  "regular",
                                                                           "holdingPeriod":  "short_term",
                                                                           "preferredAssets":  "alt_diversified",
                                                                           "marketReaction":  "trend_following",
                                                                           "pnlReaction":  "reenter_after_loss"
                                                                       }
                                                   },
+                              "volatility_responder":  {
+                                                           "nameKo":  "변동성 대응형",
+                                                           "axisProfile":  {
+                                                                               "orderSize":  "medium_size",
+                                                                               "tradeFrequency":  "high_frequency",
+                                                                               "holdingPeriod":  "short_term",
+                                                                               "preferredAssets":  "alt_diversified",
+                                                                               "marketReaction":  "trend_following",
+                                                                               "pnlReaction":  "reenter_after_loss"
+                                                                           }
+                                                       },
                               "recovery_sensitive":  {
-                                                      "nameKo":  "복구 민감형",
-                                                      "axisProfile":  {
-                                                                          "orderSize":  "concentrated",
-                                                                          "tradeFrequency":  "high_frequency",
-                                                                          "holdingPeriod":  "short_term",
-                                                                          "preferredAssets":  "alt_diversified",
-                                                                          "marketReaction":  "trend_following",
-                                                                          "pnlReaction":  "recovery_trading"
-                                                                      }
-                                                  }
+                                                         "nameKo":  "복구 민감형",
+                                                         "axisProfile":  {
+                                                                             "orderSize":  "concentrated",
+                                                                             "tradeFrequency":  "high_frequency",
+                                                                             "holdingPeriod":  "short_term",
+                                                                             "preferredAssets":  "alt_diversified",
+                                                                             "marketReaction":  "trend_following",
+                                                                             "pnlReaction":  "recovery_trading"
+                                                                         }
+                                                     }
                           },
     "scoringRules":  {
                          "axisWinner":  "각 축의 하위 라벨 점수를 합산한 뒤 가장 높은 라벨을 선택한다.",
@@ -156,8 +156,7 @@
                                                 "preferredAssets":  0.16,
                                                 "marketReaction":  0.18,
                                                 "pnlReaction":  0.18
-                                            },
-                         "coldStartBaselineConfidence":  "0~5건 실제 거래 구간에서는 온보딩 결과를 0.8, 실제 거래를 0.2로 반영한다. 실제 거래가 쌓일수록 온보딩 가중치를 낮춘다."
+                                            }
                      },
     "questions":  [
                       {
